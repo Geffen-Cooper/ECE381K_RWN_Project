@@ -16,7 +16,8 @@ cora_attributes_file = "cora/cora.content"
 edgelist = pd.read_csv(os.path.join(data_dir, cora_edges_file), sep='\t', header=None, names=["target", "source"])
 
 # store into networkx graph (directed)
-Gnx = nx.from_pandas_edgelist(edgelist).to_directed()
+Gnx = nx.from_pandas_edgelist(edgelist, create_using=nx.DiGraph())
+print(nx.number_weakly_connected_components(Gnx))
 
 # get the cora features and label as a pandas dataframe
 feature_names = ["w_{}".format(ii) for ii in range(1433)]
