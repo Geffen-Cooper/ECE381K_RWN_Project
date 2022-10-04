@@ -106,7 +106,7 @@ for idx,k in enumerate(ks):
 
         # train the subgraph and accumulate the accuracy
         sg_acc = train(sg, model)
-        print("train-val-test split: ", len(sg.ndata['train_mask']),len(sg.ndata['val_mask']),len(sg.ndata['test_mask']))
+        print("train-val-test split: ", sum(sg.ndata['train_mask']),sum(sg.ndata['val_mask']),sum(sg.ndata['test_mask']))
         print("\t trained partition ", i, " size = ", sg.num_nodes()," acc = ", sg_acc)
         sg_accs += sg_acc
 
