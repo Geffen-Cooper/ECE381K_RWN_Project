@@ -1,0 +1,13 @@
+1. Write code to train partitioned subgraphs
+    -use partition list to create dgl subgraphs and corresponding train/val/test masks
+    -write code to train subgraphs (i.e. loop over all subgraphs)
+    -write code to aggregate test scores accross subgraphs
+2. Write code/scripts to get baseline training results
+    -train on k = 1,2,4,8,16 partitions (avg. accross 3 runs because metis is not deterministic)
+        -we should expect accuracy to decrease as we increase the partitions
+3. Experiment with different METIS partitioning parameters (Repeat step 2 for each configuration)
+    -try using node degree to give each node a weight
+    -try to find a metric for giving the edges weight and use this as a partitioning parameter
+        -for example some edges may be very important to accuracy whereas others can be pruned (LTH)
+            -the pruned edges should carry little weight whereas the kept edges should carry high weight
+            -then the partitions would be 'accuracy aware' in the sense that they will avoid cutting important edges
