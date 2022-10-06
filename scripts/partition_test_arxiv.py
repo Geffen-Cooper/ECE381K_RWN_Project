@@ -7,6 +7,7 @@ import metis
 import torch.nn as nn
 import torch.nn.functional as F
 from dgl.nn import GraphConv
+import matplotlib.pyplot as plt
 
 class GCN(nn.Module):
     def __init__(self, in_feats, h_feats, num_classes):
@@ -76,7 +77,7 @@ print('Number of categories:', dataset.num_classes)
 arxiv_nx = dgl.to_networkx(arxiv_dgl)
 
 # repeat experiment for each k where k is the number of partitions
-accs = torch.zeros(5)
+accs = torch.zeros(3)
 model = GCN(arxiv_dgl.ndata['feat'].shape[1], 64, dataset.num_classes)
 accs[0] = train(arxiv_dgl, model)
 print(accs[0])
@@ -112,3 +113,15 @@ for idx,k in enumerate(ks):
     accs[idx+1] = sg_accs/k
 
 print(accs)
+
+ks.append(1)
+ks.sort()
+print(ks)
+
+plt.plot(ks, accs)
+plt.suptitle('Arxiv plot of accuracy versus k-way partitions', fontsize=12)
+plt.xlabel('K partitions', fontsize=12)
+plt.ylabel('Accuracy', fontsize=12)
+plt.yticks(np.arange(0.5, 0.9, 0.1))
+plt.yticks(np.arange(1, 3, 1))
+plt.show()

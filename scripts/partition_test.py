@@ -7,6 +7,7 @@ import networkx as nx
 import metis
 from dgl.nn import GraphConv
 import matplotlib.pyplot as plt
+import numpy as np
 
 class GCN(nn.Module):
     def __init__(self, in_feats, h_feats, num_classes):
@@ -83,6 +84,7 @@ accs = torch.zeros(5)
 model = GCN(cora_dgl.ndata['feat'].shape[1], 16, dataset.num_classes)
 accs[0] = train(cora_dgl, model)
 ks = [2, 5, 10, 20]
+index = 0
 for idx,k in enumerate(ks):
     print("training ", k, " subgraphs")
     sg_accs = 0
@@ -112,5 +114,17 @@ for idx,k in enumerate(ks):
 
     # save the avg accuracy for this k
     accs[idx+1] = sg_accs/k
+    index = index + 1
+    print("index: " + str(index))
 
 print(accs)
+ks.append(1)
+ks.sort()
+print(ks)
+
+plt.plot(ks, accs)
+plt.suptitle('Cora plot of accuracy versus k-way partitions', fontsize=12)
+plt.xlabel('K partitions', fontsize=12)
+plt.ylabel('Accuracy', fontsize=12)
+plt.yticks(np.arange(0.6, 1, 0.1))
+plt.show()

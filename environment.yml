@@ -1,4 +1,4 @@
-name: rwn
+name: DGL_Matplotlib
 channels:
   - pytorch
   - dglteam
