@@ -24,10 +24,10 @@ citeseer = nx.from_pandas_edgelist(citeseer_edgelist, create_using=nx.DiGraph())
 
 # get the features and label as a pandas dataframe
 cora_feature_names = ["w_{}".format(ii) for ii in range(1433)]
-cora_column_names =  cora_feature_names + ["subject"]
+cora_column_names = cora_feature_names + ["subject"]
 cora_node_data = pd.read_csv(os.path.join(data_dir, cora_attributes_file), sep='\t', header=None, names=cora_column_names)
 citeseer_feature_names = ["w_{}".format(ii) for ii in range(3703)]
-citeseer_column_names =  citeseer_feature_names + ["subject"]
+citeseer_column_names = citeseer_feature_names + ["subject"]
 citeseer_node_data = pd.read_csv(os.path.join(data_dir, citeseer_attributes_file), sep='\t', header=None, names=citeseer_column_names,low_memory=False)
 all_nodes = set(citeseer_node_data.index.values)
 
