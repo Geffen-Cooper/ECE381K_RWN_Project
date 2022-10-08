@@ -28,6 +28,7 @@ def train(args):
     print("Model: ",args.gnn)
     print("Number of partitions:",args.k)
     print("Dataset:", args.dataset)
+    print("num_heads: ", args.heads)
 
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset)
@@ -50,7 +51,7 @@ def train(args):
         num_classes = dataset.num_classes
 
         # create a gnn for this partition using graph parameters
-        model = load_model(args.gnn,features,num_classes)
+        model = load_model(args.gnn,features,num_classes, args.heads)
 
         # create the optimizer
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -157,12 +158,12 @@ def load_dataset(dataset):
 # ================================ models =====================================
 
 
-def load_model(model, features, num_classes):
+def load_model(model, features, num_classes, heads):
     length = features.shape[1]
     if model == "GCN":
         return GCN(length, length//2, num_classes)
     elif model == "GAT":
-        return GAT(length, length//2, num_classes)
+        return GAT(length, length//2, num_classes, num_heads = heads)
     elif model == "GSAGE":
         return GraphSage(length, length//2, num_classes)
 
@@ -175,8 +176,11 @@ def parse_args():
     parser.add_argument("gnn",help="GNN architecture (GCN, GAT, GSAGE)",type=str)
     parser.add_argument("k",help="how many partitions to split the input graph into",type=int)
     parser.add_argument("dataset",help="name of the dataset (cora, citeseeor,arxiv)",type=str)
+    parser.add_argument("heads",help="If using GAT provide num_heads, otherwise enter 0",type=str)
+
 
     args = parser.parse_args()
+    print(args)
     return args
 
 
