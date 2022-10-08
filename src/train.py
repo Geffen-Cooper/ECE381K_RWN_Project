@@ -82,7 +82,7 @@ def train(args):
                     'epoch': e+1,
                     'model_state_dict': model.state_dict(),
                     'val_acc': best_val_acc,
-                    }, 'best_model_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(len(graph))+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
+                    }, 'best_model_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
             # Backward
             optimizer.zero_grad()
@@ -93,6 +93,8 @@ def train(args):
             if e % 5 == 0:
                 print('In epoch {}, train loss: {:.3f}, train acc: {:.3f}, val loss: {:.3f}, val acc: {:.3f} (best val acc: {:.3f}))'.format(
                     e, train_loss, train_acc, val_loss, val_acc, best_val_acc))
+            
+        print("p", idx," best --> ", best_val_acc)
     
     # test the model
     
@@ -112,7 +114,7 @@ def validate(model, partition):
         # Compute loss and accuracy
         val_loss = F.cross_entropy(logits[val_mask], labels[val_mask])
         val_acc = (pred[val_mask] == labels[val_mask]).float().mean()
-        return val_acc
+        return val_acc, val_loss
 
 
 # def test(model, graph):
@@ -151,7 +153,7 @@ def load_dataset(dataset):
 
 
 def load_model(model, features, num_classes):
-    length = len(features)
+    length = features.shape[1]
     if model == "GCN":
         return GCN(length, length//2, num_classes)
     elif model == "GAT":
