@@ -4,7 +4,6 @@
 '''
 
 import argparse
-from imp import load_module
 import dgl
 import torch
 import torch.nn as nn
@@ -23,7 +22,7 @@ from models import GCN,GAT,GraphSage
 
 def train(args):
     print("training configuration:")
-    print("Model: ",args.gnn_model)
+    print("Model: ",args.gnn)
     print("Number of partitions:",args.k)
     print("Dataset:", args.dataset)
 
@@ -43,7 +42,7 @@ def train(args):
         num_classes = partition.num_classes
 
         # create a gnn for this partition using graph parameters
-        model = load_model(args.gnn_model)
+        model = load_model(args.gnn)
 
         # create the optimizer
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -162,14 +161,19 @@ def load_model(model):
 # ===================================== Command Line Arguments =====================================
 def parse_args():
     parser = argparse.ArgumentParser(description="Training and Evaluation")
+
     # logging details
-    parser.add_argument("gnn_model",help="GNN architecture (GCN, GAT, GSAGE)",type=str)
+    parser.add_argument("gnn",help="GNN architecture (GCN, GAT, GSAGE)",type=str)
     parser.add_argument("k",help="how many partitions to split the input graph into",type=int)
-    parser.add_argument("dataset",help="name of the dataset (cora, citeseeor,arxiv)",type=int)
+    parser.add_argument("dataset",help="name of the dataset (cora, citeseeor,arxiv)",type=str)
+
+    args = parser.parse_args()
+    return args
 
 
 
 # ===================================== Main =====================================
 if __name__ == "__main__":
+    print("=================")
     args = parse_args()
     train(args)
