@@ -27,10 +27,11 @@ class GCN(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self, in_feats, hidden_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes, num_heads):
         super(GAT, self).__init__()
-        self.conv1 = GATConv(in_feats, hidden_feats)
-        self.conv2 = GATConv(hidden_feats, num_classes)
+        print(in_feats, hidden_feats, num_heads)
+        self.conv1 = GATConv(in_feats, hidden_feats, num_heads=num_heads)
+        self.conv2 = GATConv(hidden_feats, num_classes, num_heads=num_heads)
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
@@ -42,8 +43,8 @@ class GAT(nn.Module):
 class GraphSage(nn.Module):
     def __init__(self, in_feats, hidden_feats, num_classes):
         super(GraphSage, self).__init__()
-        self.conv1 = SAGEConv(in_feats, hidden_feats)
-        self.conv2 = SAGEConv(hidden_feats, num_classes)
+        self.conv1 = SAGEConv(in_feats, hidden_feats, aggregator_type = "pool")
+        self.conv2 = SAGEConv(hidden_feats, num_classes, aggregator_type = "pool")
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
