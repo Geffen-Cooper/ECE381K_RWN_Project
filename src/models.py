@@ -30,8 +30,8 @@ class GAT(nn.Module):
     def __init__(self, in_feats, hidden_feats, num_classes, num_heads):
         super(GAT, self).__init__()
         print(in_feats, hidden_feats, num_heads)
-        self.conv1 = GATConv(in_feats, hidden_feats, num_heads=num_heads)
-        self.conv2 = GATConv(hidden_feats, num_classes, num_heads=num_heads)
+        self.conv1 = GATConv(in_feats, hidden_feats, num_heads=int(num_heads))
+        self.conv2 = GATConv(hidden_feats, num_classes, num_heads=int(num_heads))
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)

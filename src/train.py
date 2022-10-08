@@ -163,6 +163,7 @@ def load_model(model, features, num_classes, heads):
     if model == "GCN":
         return GCN(length, length//2, num_classes)
     elif model == "GAT":
+        #return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, num_heads = heads)
     elif model == "GSAGE":
         return GraphSage(length, length//2, num_classes)
