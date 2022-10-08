@@ -31,7 +31,12 @@ def train(args):
 
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset)
-    partitions, parts_tensor = partition_network(args.k, dataset_nx, dataset_dgl)
+    
+    if args.k == 1:
+        partitions = [dataset_dgl]
+    else:
+        partitions, parts_tensor = partition_network(args.k, dataset_nx, dataset_dgl)
+    
 
     # init tensorboard
     writer = SummaryWriter()
