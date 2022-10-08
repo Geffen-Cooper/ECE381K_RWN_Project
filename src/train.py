@@ -87,7 +87,7 @@ def train(args):
                     'epoch': e+1,
                     'model_state_dict': model.state_dict(),
                     'val_acc': best_val_acc,
-                    }, 'best_model_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
+                    }, 'best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
             # Backward
             optimizer.zero_grad()
