@@ -5,6 +5,7 @@ import networkx as nx
 import metis
 import matplotlib.pyplot as plt
 import numpy as np
+from ogb.nodeproppred import DglNodePropPredDataset
 
 
 def load_cora():
