@@ -66,6 +66,7 @@ def train(args):
 
             # Compute prediction
             pred = logits.argmax(1)
+            print(logits.shape)
 
             # Compute loss
             # Note that you should only compute the losses of the nodes in the training set.
@@ -163,6 +164,7 @@ def load_model(model, features, num_classes, heads):
     if model == "GCN":
         return GCN(length, length//2, num_classes)
     elif model == "GAT":
+        #return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, num_heads = heads)
     elif model == "GSAGE":
         return GraphSage(length, length//2, num_classes)
