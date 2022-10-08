@@ -12,6 +12,7 @@ import time
 from dgl.nn import GraphConv
 from dgl.data import load_data
 from dgl.nn.pytorch import GATConv
+from dgl.nn import SAGEConv
 
 class GCN(nn.Module):
     def __init__(self, in_feats, h_feats, num_classes):
@@ -73,3 +74,16 @@ class GAT(nn.Module):
             h = self.gat_layers[l](self.g, h).flatten(1)
         logits = self.gat_layers[-1](self.g, h).mean(1)
         return logits
+
+
+class GraphSage(nn.Module):
+    def __init__(self, in_feats, h_feats, num_classes):
+        super(GraphSage, self).__init__()
+        self.conv1 = SAGEConv(in_feats, h_feats)
+        self.conv2 = SAGEConv(h_feats, num_classes)
+
+    def forward(self, g, in_feat):
+        h = self.conv1(g, in_feat)
+        h = F.relu(h)
+        h = self.conv2(g, h)
+        return h
