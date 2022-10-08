@@ -16,9 +16,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 from ogb.nodeproppred import DglNodePropPredDataset
 from torch.utils.tensorboard import SummaryWriter
+import os
 
 # our modules
-from models import GCN,GAT,GraphSage
+from models import *
+from datasets import *
+from partition_graph import *
 
 def train(args):
     print("training configuration:")
@@ -27,8 +30,8 @@ def train(args):
     print("Dataset:", args.dataset)
 
     # first load the dataset, split into k partitions
-    graph = load_dataset(args.dataset)
-    partitions = partition(graph,args.k)
+    dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset)
+    partitions, parts_tensor = partition_network(args.k, dataset_nx, dataset_dgl)
 
     # init tensorboard
     writer = SummaryWriter()
@@ -39,10 +42,10 @@ def train(args):
         features = partition.ndata['feat']
         labels = partition.ndata['label']
         train_mask = partition.ndata['train_mask']
-        num_classes = partition.num_classes
+        num_classes = dataset.num_classes
 
         # create a gnn for this partition using graph parameters
-        model = load_model(args.gnn)
+        model = load_model(args.gnn,features,num_classes)
 
         # create the optimizer
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -79,7 +82,7 @@ def train(args):
                     'epoch': e+1,
                     'model_state_dict': model.state_dict(),
                     'val_acc': best_val_acc,
-                    }, 'best_model_' + str(args.dataset)+'_p'+str(idx+1)+'k'+str(len(graph))+'.pth') # e.g. best_model_cora_p1k5.pth is the best val accuracy for partition 1 of 5 gnn
+                    }, 'best_model_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(len(graph))+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
             # Backward
             optimizer.zero_grad()
@@ -138,24 +141,23 @@ def validate(model, partition):
 
 def load_dataset(dataset):
     if dataset == "cora":
-        return dgl.data.CoraGraphDataset()
+        return load_cora()
     elif dataset == "citeseer":
-        return dgl.data.CiteseerGraphDataset()
+        return load_citeseer()
     elif dataset == "arxiv":
-        dataset = DglNodePropPredDataset('ogbn-arxiv')
-        arxiv_dgl = dgl.data.AsNodePredDataset(dataset)[0]
-        arxiv_dgl = dgl.add_reverse_edges(arxiv_dgl)
-        return arxiv_dgl
+        return load_arxiv()
 
 # ================================ models =====================================
 
-def load_model(model):
+
+def load_model(model, features, num_classes):
+    length = len(features)
     if model == "GCN":
-        return None
+        return GCN(length, length//2, num_classes)
     elif model == "GAT":
-        return None
+        return GAT(length, length//2, num_classes)
     elif model == "GSAGE":
-        return None
+        return GraphSage(length, length//2, num_classes)
 
 
 # ===================================== Command Line Arguments =====================================
@@ -175,5 +177,6 @@ def parse_args():
 # ===================================== Main =====================================
 if __name__ == "__main__":
     print("=================")
+    #os.environ['METIS_DLL'] = '/home/mustafa/Documents/Git_Repos/ECE381K_RWN_Project/scripts/metis-5.1.0/build/Linux-x86_64/libmetis/libmetis.so'
     args = parse_args()
     train(args)

@@ -23,7 +23,7 @@ def load_cora():
     cora_dgl.num_nodes()
 
     cora_c_nx = dgl.to_networkx(cora_dgl)
-    return cora_c_nx
+    return cora_c_nx, cora_dgl, dataset
 
 
 def load_citeseer():
@@ -42,7 +42,7 @@ def load_citeseer():
     citeseer_dgl.num_nodes()
 
     citeseer_c_nx = dgl.to_networkx(citeseer_dgl)
-    return citeseer_c_nx
+    return citeseer_c_nx, citeseer_dgl, dataset
 
 
 def load_arxiv():
@@ -55,7 +55,7 @@ def load_arxiv():
     print('Number of categories:', dataset.num_classes)
 
     arxiv_nx = dgl.to_networkx(arxiv_dgl)
-    return arxiv_nx
+    return arxiv_nx, arxiv_dgl, dataset
 
 
 

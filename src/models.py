@@ -14,10 +14,10 @@ from dgl.nn import SAGEConv
 
 
 class GCN(nn.Module):
-    def __init__(self, in_feats, h_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes):
         super(GCN, self).__init__()
-        self.conv1 = GraphConv(in_feats, h_feats)
-        self.conv2 = GraphConv(h_feats, num_classes)
+        self.conv1 = GraphConv(in_feats, hidden_feats)
+        self.conv2 = GraphConv(hidden_feats, num_classes)
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
@@ -27,10 +27,10 @@ class GCN(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self, in_feats, h_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes):
         super(GAT, self).__init__()
-        self.conv1 = GATConv(in_feats, h_feats)
-        self.conv2 = GATConv(h_feats, num_classes)
+        self.conv1 = GATConv(in_feats, hidden_feats)
+        self.conv2 = GATConv(hidden_feats, num_classes)
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
@@ -40,10 +40,10 @@ class GAT(nn.Module):
 
 
 class GraphSage(nn.Module):
-    def __init__(self, in_feats, h_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes):
         super(GraphSage, self).__init__()
-        self.conv1 = SAGEConv(in_feats, h_feats)
-        self.conv2 = SAGEConv(h_feats, num_classes)
+        self.conv1 = SAGEConv(in_feats, hidden_feats)
+        self.conv2 = SAGEConv(hidden_feats, num_classes)
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
