@@ -4,6 +4,8 @@ data/
 *.pth
 src/runs/
 scripts/metis-5.1.0/
+src/dataset/
+notebooks/dataset/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

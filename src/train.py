@@ -66,7 +66,6 @@ def train(args):
 
             # Compute prediction
             pred = logits.argmax(1)
-            print(logits.shape)
 
             # Compute loss
             # Note that you should only compute the losses of the nodes in the training set.
