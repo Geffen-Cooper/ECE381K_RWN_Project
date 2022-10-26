@@ -10,7 +10,7 @@ from train import *
 
 models = ["GCN","GAT","GSAGE"]
 ks = [1,2,5,10,20]
-datasets = ["cora","citeseer"]#,"arxiv"]
+datasets = ["cora"] #,"citeseer"]#,"arxiv"]
 
 
 # iterate over the datasets
