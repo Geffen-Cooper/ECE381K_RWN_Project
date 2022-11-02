@@ -22,15 +22,14 @@ class GCN(nn.Module):
         super(GCN, self).__init__()
         self.conv1 = GraphConv(in_feats, hidden_feats)
         self.bn1 = torch.nn.BatchNorm1d(hidden_feats)
-        self.do = torch.nn.Dropout(p=0.5)
+        self.dropout = torch.nn.Dropout(p=dropout)
         self.conv2 = GraphConv(hidden_feats, num_classes)
-        self.dropout = dropout
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
         h = self.bn1(h)
         h = F.relu(h)
-        h = self.do(h)
+        h = self.dropout(h)
         h = self.conv2(g, h)
         return h
 
