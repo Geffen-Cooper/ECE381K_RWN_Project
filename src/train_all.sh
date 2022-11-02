@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# ECE381K RWN Project
+# Graph Neural Network Compression for Edge Devices
+# Mustafa Munir and Geffen Cooper
+
 python train.py GCN 1 cora 0
 python train.py GCN 2 cora 0
 python train.py GCN 5 cora 0

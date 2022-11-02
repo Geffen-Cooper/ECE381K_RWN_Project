@@ -1,3 +1,7 @@
+# ECE381K RWN Project
+# Graph Neural Network Compression for Edge Devices
+# Mustafa Munir and Geffen Cooper
+
 import dgl
 import torch
 import torch.nn as nn
@@ -14,12 +18,13 @@ from dgl.nn import SAGEConv
 
 
 class GCN(nn.Module):
-    def __init__(self, in_feats, hidden_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GCN, self).__init__()
         self.conv1 = GraphConv(in_feats, hidden_feats)
         self.bn1 = torch.nn.BatchNorm1d(hidden_feats)
         self.do = torch.nn.Dropout(p=0.5)
         self.conv2 = GraphConv(hidden_feats, num_classes)
+        self.dropout = dropout
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)

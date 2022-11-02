@@ -3,6 +3,10 @@
     and runs a training/test function
 '''
 
+# ECE381K RWN Project
+# Graph Neural Network Compression for Edge Devices
+# Mustafa Munir and Geffen Cooper
+
 import argparse
 import dgl
 import torch
@@ -31,6 +35,10 @@ def train(args):
     print("Dataset:", args.dataset)
     print("num_heads: ", args.heads)
 
+    #args.cuda = not args.no_cuda and torch.cuda.is_available()
+    #device = torch.device('cuda' if args.cuda else 'cpu')
+    #device
+
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset)
     
@@ -52,15 +60,57 @@ def train(args):
         num_classes = dataset.num_classes
 
         # create a gnn for this partition using graph parameters
-        model = load_model(args.gnn,features,num_classes, args.heads)
+        model = load_model(args.gnn,features,num_classes, args.heads, args.dropout)
+        student_model = load_model(args.gnn,features,num_classes, args.heads, args.dropout) #TODO: Make this smaller model and make model a bigger model
+
+        #model.to(device)
+        #student_model.to(device)
 
         # create the optimizer
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
         best_val_acc = 0
+        # best_distillation_loss = torch.empty(2,3)
+        # print(best_distillation_loss)
+
+        model.train()
+        student_model.train()
+
+        # Forward
+        logits = model(partition, features)
+        student_logits = student_model(partition, features)
+        distillation_loss = abs(student_logits - logits)
+        best_distillation_loss = distillation_loss
+        best_student_logits = student_logits
+        torch.save({'model_state_dict': student_model.state_dict()},
+                   'best_student_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(
+                       args.k) + '.pth')
+
+        # Obtain Distilled Model and logits
+        for i in range(100):
+            model.train()
+            student_model.train()
+
+            # Forward
+            logits = model(partition, features)
+            student_logits = student_model(partition, features)
+            distillation_loss = abs(student_logits - logits)
+            # print(logits)
+            # print(student_logits)
+            # print(distillation_loss)
+            sum_distillation_loss = torch.sum(distillation_loss)
+            # print(sum_distillation_loss)
+
+
+            if torch.sum(best_distillation_loss) < torch.sum(distillation_loss):
+                best_distillation_loss = distillation_loss
+                best_student_logits = student_logits
+                torch.save({'model_state_dict': student_model.state_dict()}, 'best_student_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth')
+
 
         # train the subgraph
         for e in range(100):
             model.train()
+            student_model.train()
 
             # Forward
             logits = model(partition, features)
@@ -89,6 +139,7 @@ def train(args):
                     'epoch': e+1,
                     'model_state_dict': model.state_dict(),
                     'val_acc': best_val_acc,
+<<<<<<< HEAD
                     'partition_size': partition.num_nodes(),
                     'train_size': sum(partition.ndata['train_mask']==True),
                     'val_size': sum(partition.ndata['val_mask']==True),
@@ -97,6 +148,11 @@ def train(args):
                     'test_mask': partition.ndata['test_mask'],
                     }, 'saved_models/best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
+=======
+                    }, 'best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
+            # Saved model is here
+            # best_model_GCN_cora_p1_k2.pth
+>>>>>>> 018d4de4db165d485a48f6e9761550f9b259e9c5
             # Backward
             optimizer.zero_grad()
             train_loss.backward()
@@ -106,8 +162,34 @@ def train(args):
             if e % 20 == 0:
                 print('In epoch {}, train loss: {:.3f}, train acc: {:.3f}, val loss: {:.3f}, val acc: {:.3f} (best val acc: {:.3f}))'.format(
                     e, train_loss, train_acc, val_loss, val_acc, best_val_acc))
-            
+
+        student_pred = best_student_logits.argmax(1)
+
+        # Compute loss
+        # Note that you should only compute the losses of the nodes in the training set.
+        student_train_loss = F.cross_entropy(best_student_logits[train_mask], labels[train_mask])
+        writer.add_scalar("Loss/train", student_train_loss, e)
+
+        # Compute accuracy on training dataset
+        student_train_acc = (student_pred[train_mask] == labels[train_mask]).float().mean()
+        writer.add_scalar("Accuracy/train", student_train_acc, e)
+
+        # evaluate on the validation set
+        student_val_acc, student_val_loss = validate(model, partition)
+        writer.add_scalar("Loss/val", student_val_loss, e)
+        writer.add_scalar("Accuracy/val", student_val_acc, e)
+
+        # Save the validation accuracy
+        torch.save({
+            'epoch': e + 1,
+            'val_acc': student_val_acc,
+            }, 'best_student_validation' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(
+            args.k) + '.pth')  # e.g. best_student_validation_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
+        # Saved model is here
+        # best_student_validation_GCN_cora_p1_k2.pth
+
         print("p", idx," best --> ", best_val_acc)
+        print("p", idx, " student --> ", student_val_acc)
     
     # test the model
     
@@ -168,10 +250,10 @@ def load_dataset(dataset):
 # ================================ models =====================================
 
 
-def load_model(model, features, num_classes, heads):
+def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, length//2, num_classes)
+        return GCN(length, length//2, num_classes, dropout)
     elif model == "GAT":
         #return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, num_heads = heads)
@@ -188,6 +270,8 @@ def parse_args():
     parser.add_argument("k",help="how many partitions to split the input graph into",type=int)
     parser.add_argument("dataset",help="name of the dataset (cora, citeseeor,arxiv)",type=str)
     parser.add_argument("heads",help="If using GAT provide num_heads, otherwise enter 0",type=str)
+    parser.add_argument("dropout", help="Dropout rate. 1 - keep_probability = dropout rate", type=float, default=0.25)
+    #parser.add_argument("no_cuda", help="If True then will disable CUDA training", default=False)
 
 
     args = parser.parse_args()
