@@ -17,6 +17,7 @@ import numpy as np
 from ogb.nodeproppred import DglNodePropPredDataset
 from torch.utils.tensorboard import SummaryWriter
 import os
+import time
 
 # our modules
 from models import *
@@ -46,7 +47,7 @@ def train(args):
     for idx,partition in enumerate(partitions):
         # graph parameters
         features = partition.ndata['feat']
-        labels = partition.ndata['label']
+        labels = partition.ndata['label'] # all labels
         train_mask = partition.ndata['train_mask']
         num_classes = dataset.num_classes
 
@@ -88,15 +89,21 @@ def train(args):
                     'epoch': e+1,
                     'model_state_dict': model.state_dict(),
                     'val_acc': best_val_acc,
-                    }, 'best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
+                    'partition_size': partition.num_nodes(),
+                    'train_size': sum(partition.ndata['train_mask']==True),
+                    'val_size': sum(partition.ndata['val_mask']==True),
+                    'total_val_size': sum(dataset_dgl.ndata['val_mask']==True),
+                    'val_mask': partition.ndata['val_mask'],
+                    'test_mask': partition.ndata['test_mask'],
+                    }, 'saved_models/best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
             # Backward
             optimizer.zero_grad()
             train_loss.backward()
             optimizer.step()
 
-            # print the 
-            if e % 5 == 0:
+            # print the current results
+            if e % 20 == 0:
                 print('In epoch {}, train loss: {:.3f}, train acc: {:.3f}, val loss: {:.3f}, val acc: {:.3f} (best val acc: {:.3f}))'.format(
                     e, train_loss, train_acc, val_loss, val_acc, best_val_acc))
             
@@ -105,9 +112,12 @@ def train(args):
     # test the model
     
 
+# validation function
 def validate(model, partition):
+    # put in evaluation mode
     model.eval()
 
+    # get the gnn parameters
     features = partition.ndata['feat']
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
@@ -117,7 +127,7 @@ def validate(model, partition):
         logits = model(partition, features)
         pred = logits.argmax(1)
 
-        # Compute loss and accuracy
+        # Compute loss and accuracy for this partition
         val_loss = F.cross_entropy(logits[val_mask], labels[val_mask])
         val_acc = (pred[val_mask] == labels[val_mask]).float().mean()
         return val_acc, val_loss

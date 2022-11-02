@@ -8,9 +8,9 @@ import numpy as np
 from models import *
 from train import *
 
-models = ["GCN","GAT","GSAGE"]
-ks = [1,2,5,10,20]
-datasets = ["cora","citeseer"]#,"arxiv"]
+models = ["GCN"]#,"GAT","GSAGE"]
+ks = [1,2,5]#,10,20]
+datasets = ["arxiv"]
 
 
 # iterate over the datasets
@@ -33,7 +33,7 @@ for dataset in datasets:
             avg_acc = 0
             # avg over each partition for a given k
             for partition in range(k):
-                checkpoint_path = "best_"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
+                checkpoint_path = "saved_models/best_"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
                 checkpoint = torch.load(checkpoint_path)
 
                 # create a gnn for this partition using graph parameters
@@ -53,8 +53,10 @@ for dataset in datasets:
                 #     test_acc = (pred[test_mask] == labels[test_mask]).float().mean()
 
                 # avg_acc += test_acc
-                avg_acc += checkpoint['val_acc']
-            avg_acc /= k
+
+                # sum up the val accuracies normalized by total validation set size
+                avg_acc += (checkpoint['val_acc']*(checkpoint['val_size']/checkpoint['total_val_size']))
+            #avg_acc /= k
             # avg acc for a given partition, should have len(ks) of these
             partition_accs.append(avg_acc)
         # model_accs.append(partition_accs)

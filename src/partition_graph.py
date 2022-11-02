@@ -13,7 +13,7 @@ def partition_network(k, dataset_nx, dataset_dgl):
     print("partitioning ", k, " subgraphs")
 
     # partition into k parts
-    _, parts = metis.part_graph(dataset_nx, k)
+    _, parts = metis.part_graph(dataset_nx, k, contig=True)
 
     parts_tensor = torch.Tensor(parts)
     subgraphs = []
