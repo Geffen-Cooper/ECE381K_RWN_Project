@@ -18,14 +18,16 @@ from dgl.nn import SAGEConv
 
 
 class GCN(nn.Module):
-    def __init__(self, in_feats, hidden_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GCN, self).__init__()
         self.conv1 = GraphConv(in_feats, hidden_feats)
         self.conv2 = GraphConv(hidden_feats, num_classes)
+        self.dropout = dropout
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
         h = F.relu(h)
+        h = F.dropout(h, self.dropout, training=self.training)
         h = self.conv2(g, h)
         return h
 

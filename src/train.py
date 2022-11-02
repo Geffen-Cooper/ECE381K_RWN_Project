@@ -34,6 +34,10 @@ def train(args):
     print("Dataset:", args.dataset)
     print("num_heads: ", args.heads)
 
+    #args.cuda = not args.no_cuda and torch.cuda.is_available()
+    #device = torch.device('cuda' if args.cuda else 'cpu')
+    #device
+
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset)
     
@@ -55,8 +59,11 @@ def train(args):
         num_classes = dataset.num_classes
 
         # create a gnn for this partition using graph parameters
-        model = load_model(args.gnn,features,num_classes, args.heads)
-        student_model = load_model(args.gnn,features,num_classes, args.heads) #TODO: Make this smaller model and make model a bigger model
+        model = load_model(args.gnn,features,num_classes, args.heads, args.dropout)
+        student_model = load_model(args.gnn,features,num_classes, args.heads, args.dropout) #TODO: Make this smaller model and make model a bigger model
+
+        #model.to(device)
+        #student_model.to(device)
 
         # create the optimizer
         optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
@@ -228,10 +235,10 @@ def load_dataset(dataset):
 # ================================ models =====================================
 
 
-def load_model(model, features, num_classes, heads):
+def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, length//2, num_classes)
+        return GCN(length, length//2, num_classes, dropout)
     elif model == "GAT":
         #return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, num_heads = heads)
@@ -248,6 +255,8 @@ def parse_args():
     parser.add_argument("k",help="how many partitions to split the input graph into",type=int)
     parser.add_argument("dataset",help="name of the dataset (cora, citeseeor,arxiv)",type=str)
     parser.add_argument("heads",help="If using GAT provide num_heads, otherwise enter 0",type=str)
+    parser.add_argument("dropout", help="Dropout rate. 1 - keep_probability = dropout rate", type=float, default=0.25)
+    #parser.add_argument("no_cuda", help="If True then will disable CUDA training", default=False)
 
 
     args = parser.parse_args()
