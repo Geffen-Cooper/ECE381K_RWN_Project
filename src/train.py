@@ -139,7 +139,6 @@ def train(args):
                     'epoch': e+1,
                     'model_state_dict': model.state_dict(),
                     'val_acc': best_val_acc,
-<<<<<<< HEAD
                     'partition_size': partition.num_nodes(),
                     'train_size': sum(partition.ndata['train_mask']==True),
                     'val_size': sum(partition.ndata['val_mask']==True),
@@ -148,11 +147,6 @@ def train(args):
                     'test_mask': partition.ndata['test_mask'],
                     }, 'saved_models/best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
-=======
-                    }, 'best_'+str(args.gnn)+'_' + str(args.dataset)+'_p'+str(idx+1)+'_k'+str(args.k)+'.pth') # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
-            # Saved model is here
-            # best_model_GCN_cora_p1_k2.pth
->>>>>>> 018d4de4db165d485a48f6e9761550f9b259e9c5
             # Backward
             optimizer.zero_grad()
             train_loss.backward()
