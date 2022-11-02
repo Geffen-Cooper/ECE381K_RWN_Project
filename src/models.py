@@ -1,3 +1,7 @@
+# ECE381K RWN Project
+# Graph Neural Network Compression for Edge Devices
+# Mustafa Munir and Geffen Cooper
+
 import dgl
 import torch
 import torch.nn as nn

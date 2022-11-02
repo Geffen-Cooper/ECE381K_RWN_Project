@@ -3,6 +3,10 @@
     and runs a training/test function
 '''
 
+# ECE381K RWN Project
+# Graph Neural Network Compression for Edge Devices
+# Mustafa Munir and Geffen Cooper
+
 import argparse
 import dgl
 import torch
