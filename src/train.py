@@ -160,7 +160,7 @@ def train(args):
             # distillation_loss = abs(student_logits - logits)
             alpha = 0.1
             Temperature = 1
-            student_train_loss = loss_fn_kd(student_logits, labels, logits, alpha, Temperature)
+            student_train_loss = loss_fn_kd(student_logits[train_mask], labels[train_mask], logits[train_mask], alpha, Temperature)
 
             # print(logits)
             # print(student_logits)
@@ -242,6 +242,7 @@ def validate(model, partition):
 def student_validate(model, student_model, partition, alpha, Temperature):
     # put in evaluation mode
     model.eval()
+    student_model.eval()
 
     # get the gnn parameters
     features = partition.ndata['feat']
@@ -256,7 +257,7 @@ def student_validate(model, student_model, partition, alpha, Temperature):
         student_pred = student_logits.argmax(1)
 
         # Compute loss and accuracy for this partition
-        val_loss = loss_fn_kd(student_logits, labels, logits, alpha, Temperature)
+        val_loss = loss_fn_kd(student_logits[val_mask], labels[val_mask], logits[val_mask], alpha, Temperature)
         val_acc = (student_pred[val_mask] == labels[val_mask]).float().mean()
         return val_acc, val_loss
 
@@ -346,7 +347,7 @@ def loss_fn_kd(outputs, labels, teacher_outputs, alpha, Temperature):
     KD_loss = nn.KLDivLoss()(F.log_softmax(outputs/T, dim=1),
                              F.softmax(teacher_outputs/T, dim=1)) * (alpha * T * T) + \
               F.cross_entropy(outputs, labels) * (1. - alpha)
-    return F.cross_entropy(outputs, labels)
+    return KD_loss
 
 # ===================================== Main =====================================
 if __name__ == "__main__":
