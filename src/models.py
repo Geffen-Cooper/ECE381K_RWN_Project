@@ -27,7 +27,7 @@ class GCN(nn.Module):
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
-        h = self.bn1(h)
+        #h = self.bn1(h)
         h = F.relu(h)
         h = self.dropout(h)
         h = self.conv2(g, h)
@@ -35,10 +35,11 @@ class GCN(nn.Module):
 
 
 class GAT(nn.Module):
-    def __init__(self, in_feats, hidden_feats, num_classes, num_heads):
+    def __init__(self, in_feats, hidden_feats, num_classes, num_heads, dropout):
         super(GAT, self).__init__()
         # print(in_feats, hidden_feats, num_heads)
         self.conv1 = GATConv(in_feats, hidden_feats, num_heads=int(num_heads))
+        self.dropout = torch.nn.Dropout(p=dropout)
         self.conv2 = GATConv(hidden_feats*int(num_heads), num_classes, 1)
 
     def forward(self, g, in_feat):
@@ -46,19 +47,22 @@ class GAT(nn.Module):
         # concatenate the last 2 dimensions num_heads * out_dimension
         h = h.view(-1, h.size(1) * h.size(2)) # (in_feat, num_heads, out_dim) -> (in_feat, num_heads * out_dim)
         h = F.relu(h)
+        h = self.dropout(h)
         h = self.conv2(g, h)
         h = h.squeeze()
         return h
 
 
 class GraphSage(nn.Module):
-    def __init__(self, in_feats, hidden_feats, num_classes):
+    def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GraphSage, self).__init__()
         self.conv1 = SAGEConv(in_feats, hidden_feats, aggregator_type = "pool")
+        self.dropout = torch.nn.Dropout(p=dropout)
         self.conv2 = SAGEConv(hidden_feats, num_classes, aggregator_type = "pool")
 
     def forward(self, g, in_feat):
         h = self.conv1(g, in_feat)
         h = F.relu(h)
+        h = self.dropout(h)
         h = self.conv2(g, h)
         return h
