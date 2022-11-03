@@ -72,6 +72,9 @@ def train(args):
         student_model = load_student_model(args.gnn, features, num_classes, args.heads,
                                    args.dropout)  # TODO: Make this smaller model and make model a bigger model
 
+        print("# teacher params",sum(p.numel() for p in model.parameters() if p.requires_grad))
+        print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
+
         model.to(device)
         student_model.to(device)
 
@@ -127,7 +130,7 @@ def train(args):
                     'val_size': sum(partition.ndata['val_mask'] == True),
                     'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
                     'val_mask': partition.ndata['val_mask'],
-                    'test_mask': partition.ndata['test_mask'],
+                    'test_mask': partition.ndata['test_mask']
                 }, best_path)  # e.g. best_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
 
             # Backward
@@ -150,6 +153,8 @@ def train(args):
         model.eval()
         student_model.train()
         model.to(device)
+
+        best_student_val_acc = 0
 
         for i in range(100):
 
@@ -182,19 +187,20 @@ def train(args):
             student_train_acc = (student_pred[train_mask] == labels[train_mask]).float().mean()
             writer.add_scalar("Loss/train", student_train_loss.item(), i)
             writer.add_scalar("Accuracy/train", student_train_acc, i)
-            print("student train loss: ", student_train_loss.item())
-            print("student train accuracy: ", student_train_acc.item())
+            # print("student train loss: ", student_train_loss.item())
+            # print("student train accuracy: ", student_train_acc.item())
 
             # evaluate on the validation set
             student_val_acc, student_val_loss = student_validate(model, student_model, partition, alpha, Temperature)
             student_val_loss = student_val_loss.item()
             writer.add_scalar("Loss/val", student_val_loss, i)
             writer.add_scalar("Accuracy/val", student_val_acc, i)
-            print("student validation loss: ", student_val_loss)
-            print("student validation accuracy: ", student_val_acc)
+            # print("student validation loss: ", student_val_loss)
+            # print("student validation accuracy: ", student_val_acc)
 
             # Save the validation accuracy
-            if best_distillation_loss > student_val_loss:
+            #if best_distillation_loss > student_val_loss:
+            if best_student_val_acc < student_val_acc:
                 best_distillation_loss = student_val_loss
                 best_student_val_acc = student_val_acc.item()
                 best_path = 'saved_models/best_student' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(
@@ -203,6 +209,12 @@ def train(args):
                 'epoch': i + 1,
                 'val_acc': best_student_val_acc,
                 'best_distillation_loss': best_distillation_loss,
+                'partition_size': partition.num_nodes(),
+                'train_size': sum(partition.ndata['train_mask'] == True),
+                'val_size': sum(partition.ndata['val_mask'] == True),
+                'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
+                'val_mask': partition.ndata['val_mask'],
+                'test_mask': partition.ndata['test_mask']
             }, 'saved_models/best_student_validation' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(
                 idx + 1) + '_k' + str(
                 args.k) + '.pth')  # e.g. best_student_validation_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
@@ -213,6 +225,13 @@ def train(args):
             student_optimizer.zero_grad()
             student_train_loss.backward()
             student_optimizer.step()
+
+            # print the current results
+            if i % 20 == 0:
+                print(
+                    'In epoch {}, student train loss: {:.3f}, student train acc: {:.3f}, student val loss: {:.3f}, student val acc: {:.3f} (best student val acc: {:.3f}))'.format(
+                        i, student_train_loss, student_train_acc, student_val_loss, student_val_acc, best_student_val_acc))
+
 
         print("p", idx, " best validation accuracy --> ", best_val_acc)
         print("p", idx, " best student validation accuracy --> ", best_student_val_acc)
@@ -300,6 +319,7 @@ def load_dataset(dataset):
 def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
+        print("load teacher")
         return GCN(length, length//2, num_classes, dropout)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
@@ -310,7 +330,7 @@ def load_model(model, features, num_classes, heads, dropout):
 def load_student_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, length//2, num_classes, dropout)
+        return GCN(length, length//200, num_classes, dropout)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//4, num_classes, heads, dropout)
