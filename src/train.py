@@ -72,6 +72,7 @@ def train(args):
         student_model = load_student_model(args.gnn, features, num_classes, args.heads,
                                    args.dropout)  # TODO: Make this smaller model and make model a bigger model
 
+        # NEW ADDITION: count model params
         print("# teacher params",sum(p.numel() for p in model.parameters() if p.requires_grad))
         print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
 
@@ -215,7 +216,7 @@ def train(args):
                 'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
                 'val_mask': partition.ndata['val_mask'],
                 'test_mask': partition.ndata['test_mask']
-            }, 'saved_models/best_student_validation' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(
+            }, 'saved_models/best_student_validationbig' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str( # TODO: use cmdline compression rate for file name
                 idx + 1) + '_k' + str(
                 args.k) + '.pth')  # e.g. best_student_validation_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
             # Saved model is here
@@ -319,7 +320,6 @@ def load_dataset(dataset):
 def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        print("load teacher")
         return GCN(length, length//2, num_classes, dropout)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
@@ -330,7 +330,8 @@ def load_model(model, features, num_classes, heads, dropout):
 def load_student_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, length//200, num_classes, dropout)
+        #return GCNStudent(length, length//20, num_classes, dropout)
+        return GCN(length, length//200, num_classes, dropout)         # TODO: add this as cmdline param (compression rate: big, small --> use to name the file)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//4, num_classes, heads, dropout)

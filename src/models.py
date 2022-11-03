@@ -33,6 +33,15 @@ class GCN(nn.Module):
         h = self.conv2(g, h)
         return h
 
+class GCNStudent(nn.Module):
+    def __init__(self, in_feats, hidden_feats, num_classes, dropout):
+        super(GCNStudent, self).__init__()
+        self.conv1 = GraphConv(in_feats, num_classes)
+
+    def forward(self, g, in_feat):
+        h = self.conv1(g, in_feat)
+        h = F.relu(h)
+        return h
 
 class GAT(nn.Module):
     def __init__(self, in_feats, hidden_feats, num_classes, num_heads, dropout):
