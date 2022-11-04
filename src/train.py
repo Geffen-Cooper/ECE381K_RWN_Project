@@ -70,7 +70,7 @@ def train(args):
         # create a gnn for this partition using graph parameters
         model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
         student_model = load_student_model(args.gnn, features, num_classes, args.heads,
-                                   args.dropout)  # TODO: Make this smaller model and make model a bigger model
+                                   args.dropout, args.compression_rate) 
 
         # NEW ADDITION: count model params
         print("# teacher params",sum(p.numel() for p in model.parameters() if p.requires_grad))
@@ -216,7 +216,7 @@ def train(args):
                 'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
                 'val_mask': partition.ndata['val_mask'],
                 'test_mask': partition.ndata['test_mask']
-            }, 'saved_models/best_student_validationbig' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str( # TODO: use cmdline compression rate for file name
+            }, 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(
                 idx + 1) + '_k' + str(
                 args.k) + '.pth')  # e.g. best_student_validation_model_cora_p1_k5.pth is the best val accuracy for partition 1 of kth gnn
             # Saved model is here
@@ -327,11 +327,17 @@ def load_model(model, features, num_classes, heads, dropout):
     elif model == "GSAGE":
         return GraphSage(length, length//2, num_classes, dropout)
 
-def load_student_model(model, features, num_classes, heads, dropout):
+
+def load_student_model(model, features, num_classes, heads, dropout, compression_rate):
     length = features.shape[1]
     if model == "GCN":
-        #return GCNStudent(length, length//20, num_classes, dropout)
-        return GCN(length, length//200, num_classes, dropout)         # TODO: add this as cmdline param (compression rate: big, small --> use to name the file)
+        if compression_rate == "big":
+            return GCN(length, length//200, num_classes, dropout)
+        elif compression_rate == "medium":
+            return GCN(length, length//100, num_classes, dropout)
+        else: # compression_rate == "small":
+            return GCN(length, length//20, num_classes, dropout)
+
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//4, num_classes, heads, dropout)
@@ -351,6 +357,7 @@ def parse_args():
     parser.add_argument("--dropout", help="Dropout rate. 1 - keep_probability = dropout rate", type=float, default=0.25)
     parser.add_argument("--no_cuda", help="If True then will disable CUDA training", type=bool, default=False)
     parser.add_argument("--student_only", help="If True then will train student model only", type=bool, default=False)
+    parser.add_argument("--compression_rate", help="compression rate for KD (big, medium, small)", type=str, default="medium")
 
     args = parser.parse_args()
     print(args)
