@@ -4,56 +4,56 @@
 # Graph Neural Network Compression for Edge Devices
 # Mustafa Munir and Geffen Cooper
 
-python train.py GCN 1 cora 0
-python train.py GCN 2 cora 0
-python train.py GCN 5 cora 0
-python train.py GCN 10 cora 0
-python train.py GCN 20 cora 0
+python train.py --gnn=GCN --k=1 --dataset=cora
+python train.py --gnn=GCN --k=2 --dataset=cora
+python train.py --gnn=GCN --k=5 --dataset=cora
+python train.py --gnn=GCN --k=10 --dataset=cora
+python train.py --gnn=GCN --k=20 --dataset=cora
 
-python train.py GCN 1 citeseer 0
-python train.py GCN 2 citeseer 0
-python train.py GCN 5 citeseer 0
-python train.py GCN 10 citeseer 0
-python train.py GCN 20 citeseer 0
+python train.py --gnn=GCN --k=1 --dataset=citeseer
+python train.py --gnn=GCN --k=2 --dataset=citeseer
+python train.py --gnn=GCN --k=5 --dataset=citeseer
+python train.py --gnn=GCN --k=10 --dataset=citeseer
+python train.py --gnn=GCN --k=20 --dataset=citeseer
 
-python train.py GCN 1 arxiv 0
-python train.py GCN 2 arxiv 0
-python train.py GCN 5 arxiv 0
-python train.py GCN 10 arxiv 0
-python train.py GCN 20 arxiv 0
+python train.py --gnn=GCN --k=1 --dataset=arxiv
+python train.py --gnn=GCN --k=2 --dataset=arxiv
+python train.py --gnn=GCN --k=5 --dataset=arxiv
+python train.py --gnn=GCN --k=10 --dataset=arxiv
+python train.py --gnn=GCN --k=20 --dataset=arxiv
 
-python train.py GAT 1 cora 3
-python train.py GAT 2 cora 3
-python train.py GAT 5 cora 3
-python train.py GAT 10 cora 3
-python train.py GAT 20 cora 3
+python train.py --gnn=GAT --k=1 --dataset=cora
+python train.py --gnn=GAT --k=2 --dataset=cora
+python train.py --gnn=GAT --k=5 --dataset=cora
+python train.py --gnn=GAT --k=10 --dataset=cora
+python train.py --gnn=GAT --k=20 --dataset=cora
 
-python train.py GAT 1 citeseer 3
-python train.py GAT 2 citeseer 3
-python train.py GAT 5 citeseer 3
-python train.py GAT 10 citeseer 3
-python train.py GAT 20 citeseer 3
+python train.py --gnn=GAT --k=1 --dataset=citeseer
+python train.py --gnn=GAT --k=2 --dataset=citeseer
+python train.py --gnn=GAT --k=5 --dataset=citeseer
+python train.py --gnn=GAT --k=10 --dataset=citeseer
+python train.py --gnn=GAT --k=20 --dataset=citeseer
 
-python train.py GAT 1 arxiv 3
-python train.py GAT 2 arxiv 3
-python train.py GAT 5 arxiv 3
-python train.py GAT 10 arxiv 3
-python train.py GAT 20 arxiv 3
+python train.py --gnn=GAT --k=1 --dataset=arxiv
+python train.py --gnn=GAT --k=2 --dataset=arxiv
+python train.py --gnn=GAT --k=5 --dataset=arxiv
+python train.py --gnn=GAT --k=10 --dataset=arxiv
+python train.py --gnn=GAT --k=20 --dataset=arxiv
 
-python train.py GSAGE 1 cora 0
-python train.py GSAGE 2 cora 0
-python train.py GSAGE 5 cora 0
-python train.py GSAGE 10 cora 0
-python train.py GSAGE 20 cora 0
+python train.py --gnn=GSAGE --k=1 --dataset=cora
+python train.py --gnn=GSAGE --k=2 --dataset=cora
+python train.py --gnn=GSAGE --k=5 --dataset=cora
+python train.py --gnn=GSAGE --k=10 --dataset=cora
+python train.py --gnn=GSAGE --k=20 --dataset=cora
 
-python train.py GSAGE 1 citeseer 0
-python train.py GSAGE 2 citeseer 0
-python train.py GSAGE 5 citeseer 0
-python train.py GSAGE 10 citeseer 0
-python train.py GSAGE 20 citeseer 0
+python train.py --gnn=GSAGE --k=1 --dataset=citeseer
+python train.py --gnn=GSAGE --k=2 --dataset=citeseer
+python train.py --gnn=GSAGE --k=5 --dataset=citeseer
+python train.py --gnn=GSAGE --k=10 --dataset=citeseer
+python train.py --gnn=GSAGE --k=20 --dataset=citeseer
 
-python train.py GSAGE 1 arxiv 0
-python train.py GSAGE 2 arxiv 0
-python train.py GSAGE 5 arxiv 0
-python train.py GSAGE 10 arxiv 0
-python train.py GSAGE 20 arxiv 0
+python train.py --gnn=GSAGE --k=1 --dataset=arxiv
+python train.py --gnn=GSAGE --k=2 --dataset=arxiv
+python train.py --gnn=GSAGE --k=5 --dataset=arxiv
+python train.py --gnn=GSAGE --k=10 --dataset=arxiv
+python train.py --gnn=GSAGE --k=20 --dataset=arxiv
