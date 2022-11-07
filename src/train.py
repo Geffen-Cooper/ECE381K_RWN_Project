@@ -188,7 +188,7 @@ def train(args):
                 best_path = 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth' 
                 checkpoint = {
                     'epoch': i + 1,
-                    'model_state_dict': teacher_model.state_dict(),
+                    'model_state_dict': student_model.state_dict(),
                     'val_acc': best_student_val_acc,
                     'best_distillation_loss': best_distillation_loss,
                     'partition_size': partition.num_nodes(),

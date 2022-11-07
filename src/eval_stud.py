@@ -11,7 +11,7 @@ from train import *
 models = ["GCN"]#,"GAT","GSAGE"]
 ks = [1,2,5,10,20]
 datasets = ["cora","citeseer"]#,"arxiv"]
-compression_rates = ["teacher","small"]
+compression_rates = ["teacher","small","medium","big"]
 
 
 # iterate over the datasets
@@ -40,9 +40,10 @@ for dataset in datasets:
                     checkpoint_path = "saved_models/best_student_validation_"+str(compression_rate)+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
                     if compression_rate == "teacher":
                         checkpoint_path = "saved_models/best_"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
+                    # else:
+                    #     print("student",checkpoint_path)
                     checkpoint = torch.load(checkpoint_path)
                     args = checkpoint['args']
-                    print(checkpoint.keys())
 
                     # get the partition node ids to create the dgl subgraph
                     sg = dataset_dgl
@@ -55,9 +56,12 @@ for dataset in datasets:
                     features = sg.ndata['feat']
                     
                     # load the model
-                    m = load_model(args.gnn,features,data.num_classes,args.heads, args.dropout)
+                    m = load_student_model(args.gnn,features,data.num_classes,args.heads, args.dropout, args.compression_rate)
+                    if compression_rate == "teacher":
+                        m = load_model(args.gnn,features,data.num_classes,args.heads, args.dropout)
                     m.load_state_dict(checkpoint['model_state_dict'])
                     num_params = sum(p.numel() for p in m.parameters() if p.requires_grad)
+                    
                     m.eval()
 
                     # forward pass for evaluation
