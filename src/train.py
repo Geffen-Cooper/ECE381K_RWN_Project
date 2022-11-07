@@ -124,7 +124,8 @@ def train(args):
                     'val_size': sum(partition.ndata['val_mask'] == True),
                     'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
                     'val_mask': partition.ndata['val_mask'],
-                    'test_mask': partition.ndata['test_mask']
+                    'test_mask': partition.ndata['test_mask'],
+                    'args':args
                 }
                 if args.k > 1:
                     checkpoint['node_ids'] = partition.ndata['og_ids']
@@ -187,6 +188,7 @@ def train(args):
                 best_path = 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth' 
                 checkpoint = {
                     'epoch': i + 1,
+                    'model_state_dict': teacher_model.state_dict(),
                     'val_acc': best_student_val_acc,
                     'best_distillation_loss': best_distillation_loss,
                     'partition_size': partition.num_nodes(),
@@ -194,7 +196,8 @@ def train(args):
                     'val_size': sum(partition.ndata['val_mask'] == True),
                     'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
                     'val_mask': partition.ndata['val_mask'],
-                    'test_mask': partition.ndata['test_mask']
+                    'test_mask': partition.ndata['test_mask'],
+                    'args':args
                 }
                 if args.k > 1:
                     checkpoint['node_ids'] = partition.ndata['og_ids']

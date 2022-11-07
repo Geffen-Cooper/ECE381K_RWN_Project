@@ -29,7 +29,6 @@ def partition_network(k, dataset_nx, dataset_dgl):
         # make it a dgl subgraph and store the og ids from the whole graph
         sg = dgl.node_subgraph(dataset_dgl, sg_nodes)
         sg.ndata['og_ids'] = torch.LongTensor(sg_nodes)
-        print(sg.ndata.keys())
 
         # get the dgl subgraph from the node ids
         subgraphs.append(sg)
