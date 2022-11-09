@@ -294,6 +294,8 @@ def load_dataset(dataset):
         return load_citeseer()
     elif dataset == "arxiv":
         return load_arxiv()
+    elif dataset == "proteins":
+        return load_ogbn_proteins()
 
 # ================================ models =====================================
 

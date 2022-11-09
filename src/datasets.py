@@ -63,4 +63,17 @@ def load_arxiv():
     return arxiv_nx, arxiv_dgl, dataset
 
 
+def load_ogbn_proteins():
+    dataset = DglNodePropPredDataset('ogbn-proteins')
+    device = 'cpu'  # change to 'cuda' for GPU
+    proteins_dgl = dgl.data.AsNodePredDataset(dataset)[0]
+    # Add reverse edges since ogbn-arxiv is unidirectional.
+    proteins_dgl = dgl.add_reverse_edges(proteins_dgl)
+
+    print('Number of categories:', dataset.num_classes)
+
+    proteins_nx = dgl.to_networkx(proteins_dgl)
+    return proteins_nx, proteins_dgl, dataset
+
+
 
