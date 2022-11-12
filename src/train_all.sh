@@ -4,56 +4,89 @@
 # Graph Neural Network Compression for Edge Devices
 # Mustafa Munir and Geffen Cooper
 
-python train.py --gnn=GCN --k=1 --dataset=cora
-python train.py --gnn=GCN --k=2 --dataset=cora
-python train.py --gnn=GCN --k=5 --dataset=cora
-python train.py --gnn=GCN --k=10 --dataset=cora
-python train.py --gnn=GCN --k=20 --dataset=cora
+START=$(date +%s.%N)
+python train.py --gnn=GCN --k=1 --dataset=cora --compression_rate=big
+python train.py --gnn=GCN --k=2 --dataset=cora --compression_rate=big
+python train.py --gnn=GCN --k=5 --dataset=cora --compression_rate=big 
+python train.py --gnn=GCN --k=10 --dataset=cora --compression_rate=big
+python train.py --gnn=GCN --k=20 --dataset=cora --compression_rate=big
 
-python train.py --gnn=GCN --k=1 --dataset=citeseer
-python train.py --gnn=GCN --k=2 --dataset=citeseer
-python train.py --gnn=GCN --k=5 --dataset=citeseer
-python train.py --gnn=GCN --k=10 --dataset=citeseer
-python train.py --gnn=GCN --k=20 --dataset=citeseer
+python train.py --gnn=GCN --k=1 --dataset=cora --compression_rate=medium
+python train.py --gnn=GCN --k=2 --dataset=cora --compression_rate=medium
+python train.py --gnn=GCN --k=5 --dataset=cora --compression_rate=medium
+python train.py --gnn=GCN --k=10 --dataset=cora --compression_rate=medium
+python train.py --gnn=GCN --k=20 --dataset=cora --compression_rate=medium
 
-python train.py --gnn=GCN --k=1 --dataset=arxiv
-python train.py --gnn=GCN --k=2 --dataset=arxiv
-python train.py --gnn=GCN --k=5 --dataset=arxiv
-python train.py --gnn=GCN --k=10 --dataset=arxiv
-python train.py --gnn=GCN --k=20 --dataset=arxiv
+python train.py --gnn=GCN --k=1 --dataset=cora --compression_rate=small
+python train.py --gnn=GCN --k=2 --dataset=cora --compression_rate=small
+python train.py --gnn=GCN --k=5 --dataset=cora --compression_rate=small 
+python train.py --gnn=GCN --k=10 --dataset=cora --compression_rate=small
+python train.py --gnn=GCN --k=20 --dataset=cora --compression_rate=small
 
-python train.py --gnn=GAT --k=1 --dataset=cora
-python train.py --gnn=GAT --k=2 --dataset=cora
-python train.py --gnn=GAT --k=5 --dataset=cora
-python train.py --gnn=GAT --k=10 --dataset=cora
-python train.py --gnn=GAT --k=20 --dataset=cora
+ENDCORA=$(date +%s.%N)
+CORADIFF=$(echo "$ENDCORA - $START" | bc)
+echo cora $CORADIFF
 
-python train.py --gnn=GAT --k=1 --dataset=citeseer
-python train.py --gnn=GAT --k=2 --dataset=citeseer
-python train.py --gnn=GAT --k=5 --dataset=citeseer
-python train.py --gnn=GAT --k=10 --dataset=citeseer
-python train.py --gnn=GAT --k=20 --dataset=citeseer
+python train.py --gnn=GCN --k=1 --dataset=citeseer --compression_rate=big
+python train.py --gnn=GCN --k=2 --dataset=citeseer --compression_rate=big
+python train.py --gnn=GCN --k=5 --dataset=citeseer --compression_rate=big 
+python train.py --gnn=GCN --k=10 --dataset=citeseer --compression_rate=big
+python train.py --gnn=GCN --k=20 --dataset=citeseer --compression_rate=big
 
-python train.py --gnn=GAT --k=1 --dataset=arxiv
-python train.py --gnn=GAT --k=2 --dataset=arxiv
-python train.py --gnn=GAT --k=5 --dataset=arxiv
-python train.py --gnn=GAT --k=10 --dataset=arxiv
-python train.py --gnn=GAT --k=20 --dataset=arxiv
+python train.py --gnn=GCN --k=1 --dataset=citeseer --compression_rate=medium
+python train.py --gnn=GCN --k=2 --dataset=citeseer --compression_rate=medium
+python train.py --gnn=GCN --k=5 --dataset=citeseer --compression_rate=medium
+python train.py --gnn=GCN --k=10 --dataset=citeseer --compression_rate=medium
+python train.py --gnn=GCN --k=20 --dataset=citeseer --compression_rate=medium
 
-python train.py --gnn=GSAGE --k=1 --dataset=cora
-python train.py --gnn=GSAGE --k=2 --dataset=cora
-python train.py --gnn=GSAGE --k=5 --dataset=cora
-python train.py --gnn=GSAGE --k=10 --dataset=cora
-python train.py --gnn=GSAGE --k=20 --dataset=cora
+python train.py --gnn=GCN --k=1 --dataset=citeseer --compression_rate=small
+python train.py --gnn=GCN --k=2 --dataset=citeseer --compression_rate=small
+python train.py --gnn=GCN --k=5 --dataset=citeseer --compression_rate=small 
+python train.py --gnn=GCN --k=10 --dataset=citeseer --compression_rate=small
+python train.py --gnn=GCN --k=20 --dataset=citeseer --compression_rate=small
 
-python train.py --gnn=GSAGE --k=1 --dataset=citeseer
-python train.py --gnn=GSAGE --k=2 --dataset=citeseer
-python train.py --gnn=GSAGE --k=5 --dataset=citeseer
-python train.py --gnn=GSAGE --k=10 --dataset=citeseer
-python train.py --gnn=GSAGE --k=20 --dataset=citeseer
+ENDCITE=$(date +%s.%N)
+CITEDIFF=$(echo "$ENDCITE - $ENDCORA" | bc)
+echo citeseer $CITEDIFF
 
-python train.py --gnn=GSAGE --k=1 --dataset=arxiv
-python train.py --gnn=GSAGE --k=2 --dataset=arxiv
-python train.py --gnn=GSAGE --k=5 --dataset=arxiv
-python train.py --gnn=GSAGE --k=10 --dataset=arxiv
-python train.py --gnn=GSAGE --k=20 --dataset=arxiv
+python train.py --gnn=GCN --k=1 --dataset=arxiv --compression_rate=big
+python train.py --gnn=GCN --k=2 --dataset=arxiv --compression_rate=big
+python train.py --gnn=GCN --k=5 --dataset=arxiv --compression_rate=big 
+python train.py --gnn=GCN --k=10 --dataset=arxiv --compression_rate=big
+python train.py --gnn=GCN --k=20 --dataset=arxiv --compression_rate=big
+
+python train.py --gnn=GCN --k=1 --dataset=arxiv --compression_rate=medium
+python train.py --gnn=GCN --k=2 --dataset=arxiv --compression_rate=medium
+python train.py --gnn=GCN --k=5 --dataset=arxiv --compression_rate=medium
+python train.py --gnn=GCN --k=10 --dataset=arxiv --compression_rate=medium
+python train.py --gnn=GCN --k=20 --dataset=arxiv --compression_rate=medium
+
+python train.py --gnn=GCN --k=1 --dataset=arxiv --compression_rate=small
+python train.py --gnn=GCN --k=2 --dataset=arxiv --compression_rate=small
+python train.py --gnn=GCN --k=5 --dataset=arxiv --compression_rate=small 
+python train.py --gnn=GCN --k=10 --dataset=arxiv --compression_rate=small
+python train.py --gnn=GCN --k=20 --dataset=arxiv --compression_rate=small
+
+ENDARXIV=$(date +%s.%N)
+ARXIVDIFF=$(echo "$ENDARXIV - $ENDCITE" | bc)
+
+TOTAL=$(echo "$ENDARXIV - $START" | bc)
+echo cora $CORADIFF citeseer $CITEDIFF arxiv $ARXIVDIFF
+echo total $TOTAL
+# python train.py --gnn=GCN --k=1 --dataset=proteins --compression_rate=big
+# python train.py --gnn=GCN --k=2 --dataset=proteins --compression_rate=big
+# python train.py --gnn=GCN --k=5 --dataset=proteins --compression_rate=big 
+# python train.py --gnn=GCN --k=10 --dataset=proteins --compression_rate=big
+# python train.py --gnn=GCN --k=20 --dataset=proteins --compression_rate=big
+
+# python train.py --gnn=GCN --k=1 --dataset=proteins --compression_rate=medium
+# python train.py --gnn=GCN --k=2 --dataset=proteins --compression_rate=medium
+# python train.py --gnn=GCN --k=5 --dataset=proteins --compression_rate=medium
+# python train.py --gnn=GCN --k=10 --dataset=proteins --compression_rate=medium
+# python train.py --gnn=GCN --k=20 --dataset=proteins --compression_rate=medium
+
+# python train.py --gnn=GCN --k=1 --dataset=proteins --compression_rate=small
+# python train.py --gnn=GCN --k=2 --dataset=proteins --compression_rate=small
+# python train.py --gnn=GCN --k=5 --dataset=proteins --compression_rate=small 
+# python train.py --gnn=GCN --k=10 --dataset=proteins --compression_rate=small
+# python train.py --gnn=GCN --k=20 --dataset=proteins --compression_rate=small

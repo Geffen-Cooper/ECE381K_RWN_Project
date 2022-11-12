@@ -10,7 +10,7 @@ from train import *
 
 models = ["GCN"]#,"GAT","GSAGE"]
 ks = [1,2,5,10,20]
-datasets = ["cora","citeseer"]#,"arxiv"]
+datasets = ["cora","citeseer","arxiv"]
 compression_rates = ["teacher","small","medium","big"]
 
 
@@ -18,7 +18,7 @@ compression_rates = ["teacher","small","medium","big"]
 for dataset in datasets:
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, data = load_dataset(dataset)
-    val_mask = dataset_dgl.ndata['val_mask']
+    val_mask = dataset_dgl.ndata['test_mask']
     labels = dataset_dgl.ndata['label']
 
     # Separate figure for each dataset
@@ -74,15 +74,22 @@ for dataset in datasets:
                         preds[sg_node_ids] = pred
                 # Compute loss and accuracy
                 #val_loss = F.cross_entropy(torch.FloatTensor(preds[val_mask]), labels[val_mask])
+                # print(sum(preds[val_mask] == labels[val_mask]),len(preds[val_mask]))
+                # exit()
                 val_acc = (preds[val_mask] == labels[val_mask]).float().mean()
                 k_accs.append(val_acc)
 
             # model_accs.append(partition_accs)
-            plt.plot(ks,k_accs,label=compression_rate+":"+str(num_params))
+            txt = compression_rate
+            if compression_rate == "small":
+                txt = "big"
+            if compression_rate == "big":
+                txt = "small"
+            plt.plot(ks,k_accs,label=txt+":"+str(num_params))
             plt.suptitle('Plot of accuracy versus k-way partitions: '+dataset, fontsize=12)
             plt.xlabel('K partitions', fontsize=12)
             plt.ylabel('Accuracy', fontsize=12)
-            plt.yticks(np.arange(0.5, 1, 0.1))
+            plt.yticks(np.arange(0.3, 1, 0.1))
             plt.xticks([1,2,5,10,20])
     plt.legend()
 plt.show()

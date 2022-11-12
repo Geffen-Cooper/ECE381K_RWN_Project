@@ -263,28 +263,7 @@ def student_validate(model, student_model, partition, alpha, Temperature):
         return val_acc, val_loss
 
 
-# def test(model, graph):
-#     print("============ Testing Model ============")
-#     best_checkpoint = torch.load('best_model.pth')
-#     best_epoch = best_checkpoint['epoch']
-#     best_acc = best_checkpoint['val_acc']
-#     model.load_state_dict(best_checkpoint['state_dict'])
-#     model.eval()
-#     print("Best Val Acc: ", best_acc, " at epoch ", best_epoch)
 
-#     features = graph.ndata['feat']
-#     labels = graph.ndata['label']
-#     test_mask = graph.ndata['val_mask']
-
-#     with torch.no_grad():
-#         # Forward
-#         logits = model(graph, features)
-#         pred = logits.argmax(1)
-
-#         # Compute loss and accuracy
-#         test_loss = F.cross_entropy(logits[test_mask], labels[test_mask])
-#         test_acc = (pred[test_mask] == labels[test_mask]).float().mean()
-#         return test_acc
 # ================================ datasets =====================================
 
 def load_dataset(dataset):
@@ -315,11 +294,11 @@ def load_student_model(model, features, num_classes, heads, dropout, compression
     length = features.shape[1]
     if model == "GCN":
         if compression_rate == "big":
-            return GCN(length, length//200, num_classes, dropout)
+            return GCN(length, int(length*0.02), num_classes, dropout)
         elif compression_rate == "medium":
-            return GCN(length, length//100, num_classes, dropout)
+            return GCN(length, int(length*.05), num_classes, dropout)
         else: # compression_rate == "small":
-            return GCN(length, length//20, num_classes, dropout)
+            return GCN(length, int(length*.1), num_classes, dropout)
 
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)

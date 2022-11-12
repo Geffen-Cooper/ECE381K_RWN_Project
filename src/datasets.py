@@ -66,7 +66,10 @@ def load_arxiv():
 def load_ogbn_proteins():
     dataset = DglNodePropPredDataset('ogbn-proteins')
     device = 'cpu'  # change to 'cuda' for GPU
-    proteins_dgl = dgl.data.AsNodePredDataset(dataset)[0]
+    print(dataset)
+    proteins_dgl = dgl.data.AsNodePredDataset(dataset)#[0]
+    print(proteins_dgl)
+    exit()
     # Add reverse edges since ogbn-arxiv is unidirectional.
     proteins_dgl = dgl.add_reverse_edges(proteins_dgl)
 
