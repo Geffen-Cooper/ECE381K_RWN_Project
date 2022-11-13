@@ -33,6 +33,8 @@ class GCN(nn.Module):
         h = self.conv2(g, h)
         return h
 
+
+# GCN L1 STUDENT NOT USED
 class GCNStudent(nn.Module):
     def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GCNStudent, self).__init__()
