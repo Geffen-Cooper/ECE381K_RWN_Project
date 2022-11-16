@@ -5,7 +5,7 @@ flag_points = ["end","proc-start","pre-import","start-prog","load-data","load-mo
 cs = ['k','k','c','g','b','m','y','g','r']
 flag_times = []
 
-with open("log_k1.txt") as file:
+with open("logs/test.txt") as file:
     lines = [line.rstrip() for line in file]
 
 
