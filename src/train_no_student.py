@@ -57,10 +57,6 @@ def train(args):
         #                            args.dropout, args.compression_rate) 
 
         # NEW ADDITION: count model params
-        i = 0
-        for p in teacher_model.parameters():
-            if p.requires_grad:
-                print(p.size())
         print("# teacher params",sum(p.numel() for p in teacher_model.parameters() if p.requires_grad))
         # print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
 
@@ -86,8 +82,8 @@ def train(args):
         for e in range(100):
             # Forward
             logits = teacher_model(partition, features)
-            g = make_dot(logits)
-            g.view()
+            # g = make_dot(logits)
+            # g.view()
             # Compute prediction
             pred = logits.argmax(1)
             print("forward\n", time.time(),flush=True)
@@ -124,7 +120,7 @@ def train(args):
                 save(checkpoint, best_path)
             
             print("loss-val\n", time.time(),flush=True)
-            time.sleep(1)
+            time.sleep(2)
             
 
             # Backward
@@ -267,7 +263,7 @@ def load_dataset(dataset):
 def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, int(length*0.005), num_classes, dropout)
+        return GCN(length, int(length), num_classes, dropout)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, heads, dropout)
@@ -381,7 +377,7 @@ def make_dot(var, params=None):
 
 # ===================================== Main =====================================
 if __name__ == "__main__":
-    print("start-prog\n", time.time(),flush=True)
+    # print("start-prog\n", time.time(),flush=True)
     time.sleep(1)
     args = parse_args()
     train(args)

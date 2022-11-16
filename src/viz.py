@@ -16,20 +16,28 @@ lines.remove(lines[0])
 
 
 for flag in flag_points[2:num_flags]:
-    flag_times.append(float(lines[lines.index(flag)+1][1:]))
+    flag_times.append(float(lines[lines.index(flag)+1].strip()))
+    lines.remove(lines[lines.index(flag)+1])
 
 mems = []
 for idx,line in enumerate(lines):
-    if line[0:2].isdigit():
-        mems.append(int(line[:-1])/1000000)
+    if line.strip() == "RES" and idx+1 < len(lines):
+        m = lines[idx+1].strip()
+        if m[-1].isdigit():
+            mems.append(float(m)/1000000)
+        elif m[-1] == "m":
+            mems.append(float(m[:-1])/1000)
+        elif m[-1] == "g":
+            mems.append(float(m[:-1]))
 
 t = [0]
 for idx,line in enumerate(mems):
-    t.append(t[idx]+0.2)
+    t.append(t[idx]+0.15)
 plt.plot(t[:-1],mems)
 plt.xlabel("sec")
 plt.ylabel("GB")
-
+print("mems",mems)
+print("flag times",flag_times)
 
 for idx, f in enumerate(flag_points[:num_flags]):
     if f == "proc-start" or f == "end":
