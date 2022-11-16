@@ -22,6 +22,7 @@ from ogb.nodeproppred import DglNodePropPredDataset
 from torch.utils.tensorboard import SummaryWriter
 import os
 import time
+import multiprocessing
 
 # our modules
 from models import *
@@ -40,7 +41,7 @@ def train(args):
 
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
-    #device = 'cpu' # To override to cpu
+    device = 'cpu' # To override to cpu
     print(device)
 
     # first load the dataset, split into k partitions
@@ -53,178 +54,198 @@ def train(args):
 
     # init tensorboard
     writer = SummaryWriter()
+    print("partitions: \n", partitions)
 
     # training each partition
+    index = 0
     for idx, partition in enumerate(partitions):
-        # graph parameters
-        features = partition.ndata['feat']
-        labels = partition.ndata['label']  # all labels
-        train_mask = partition.ndata['train_mask']
-        num_classes = dataset.num_classes
+        print("idx: \n", idx)
+        print("partition: \n", partition)
+        #globals()["partition_%d"%idx] = partition
+        
+    
+    #while index < idx:
+    #    print("index: ", index)
+    #    print("\n partition 0: \n", partition_0)
+    #    print("\n partition 1: \n", partition_1)
 
-        partition = partition.to(device)
-        features = features.to(device)
-        labels = labels.to(device)
+        #parallel_0 = multiprocessing.Process(target=train_parallel(partition, dataset, args))
+        #parallel_1 = multiprocessing.Process(target=train_parallel(partition))
+        train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx)
 
-        # create a gnn for this partition using graph parameters
-        teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
-        student_model = load_student_model(args.gnn, features, num_classes, args.heads,
-                                   args.dropout, args.compression_rate) 
-
-        # NEW ADDITION: count model params
-        print("# teacher params",sum(p.numel() for p in teacher_model.parameters() if p.requires_grad))
-        print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
-
-        teacher_model.to(device)
-        student_model.to(device)
-
-        # create the optimizer
-        optimizer = torch.optim.Adam(teacher_model.parameters(), lr=0.01)
-        student_optimizer = torch.optim.Adam(student_model.parameters(), lr=0.01)
-        best_val_acc = 0
-        best_path = 'none'
-
-        teacher_model.train()
-
-        # Initializing distillation loss
-        distillation_loss = 1000000000  # Very large number
-        best_distillation_loss = distillation_loss
-
-
-        # train the subgraph
-        for e in range(100):
-
-            # Forward
-            logits = teacher_model(partition, features)
-
-            # Compute prediction
-            pred = logits.argmax(1)
-
-            # Compute loss
-            # Note that you should only compute the losses of the nodes in the training set.
-            train_loss = F.cross_entropy(logits[train_mask], labels[train_mask])
-            writer.add_scalar("Loss/train", train_loss, e)
-
-            # Compute accuracy on training dataset
-            train_acc = (pred[train_mask] == labels[train_mask]).float().mean()
-            writer.add_scalar("Accuracy/train", train_acc, e)
-
-            # evaluate on the validation set
-            val_acc, val_loss = validate(teacher_model, partition)
-            writer.add_scalar("Loss/val", val_loss, e)
-            writer.add_scalar("Accuracy/val", val_acc, e)
-            
-            # Save the best validation accuracy and the corresponding model.
-            if best_val_acc < val_acc:
-                best_val_acc = val_acc.item()
-                best_path = 'saved_models/best_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth'
-                checkpoint = {
-                    'epoch': e + 1,
-                    'model_state_dict': teacher_model.state_dict(),
-                    'val_acc': best_val_acc,
-                    'partition_size': partition.num_nodes(),
-                    'train_size': sum(partition.ndata['train_mask'] == True),
-                    'val_size': sum(partition.ndata['val_mask'] == True),
-                    'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
-                    'val_mask': partition.ndata['val_mask'],
-                    'test_mask': partition.ndata['test_mask'],
-                    'args':args
-                }
-                if args.k > 1:
-                    checkpoint['node_ids'] = partition.ndata['og_ids']
-                torch.save(checkpoint, best_path)
-
-            # Backward
-            optimizer.zero_grad()
-            train_loss.backward()
-            optimizer.step()
-
-            # print the current results
-            if e % 20 == 0:
-                print(
-                    'In epoch {}, train loss: {:.3f}, train acc: {:.3f}, val loss: {:.3f}, val acc: {:.3f} (best val acc: {:.3f}))'.format(
-                        e, train_loss, train_acc, val_loss, val_acc, best_val_acc))
-
-# ########################################STUDENT MODEL STARTS##########################################################
-
-        # Obtain Distilled Model and logits
-        teacher_checkpoint = torch.load(best_path)
-        teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
-        teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
-        teacher_model.eval()
-        student_model.train()
-        teacher_model.to(device)
-
-        best_student_val_acc = 0
-
-        for i in range(100):
-
-            # Forward
-            logits = teacher_model(partition, features)
-            student_logits = student_model(partition, features)
-
-            # distillation_loss = abs(student_logits - logits)
-            alpha = 0.1
-            Temperature = 1
-            student_train_loss = loss_fn_kd(student_logits[train_mask], labels[train_mask], logits[train_mask], alpha, Temperature)
-
-            student_pred = student_logits.argmax(1)
-
-            # Compute loss
-            # Note that you should only compute the losses of the nodes in the training set.
-            # Compute accuracy on training dataset
-            student_train_acc = (student_pred[train_mask] == labels[train_mask]).float().mean()
-            writer.add_scalar("Loss/train", student_train_loss.item(), i)
-            writer.add_scalar("Accuracy/train", student_train_acc, i)
-
-            # evaluate on the validation set
-            student_val_acc, student_val_loss = student_validate(teacher_model, student_model, partition, alpha, Temperature)
-            student_val_loss = student_val_loss.item()
-            writer.add_scalar("Loss/val", student_val_loss, i)
-            writer.add_scalar("Accuracy/val", student_val_acc, i)
-
-            # Save the validation accuracy
-            #if best_distillation_loss > student_val_loss:
-            if best_student_val_acc < student_val_acc:
-                best_distillation_loss = student_val_loss
-                best_student_val_acc = student_val_acc.item()
-                best_path = 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth' 
-                checkpoint = {
-                    'epoch': i + 1,
-                    'model_state_dict': student_model.state_dict(),
-                    'val_acc': best_student_val_acc,
-                    'best_distillation_loss': best_distillation_loss,
-                    'partition_size': partition.num_nodes(),
-                    'train_size': sum(partition.ndata['train_mask'] == True),
-                    'val_size': sum(partition.ndata['val_mask'] == True),
-                    'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
-                    'val_mask': partition.ndata['val_mask'],
-                    'test_mask': partition.ndata['test_mask'],
-                    'args':args
-                }
-                if args.k > 1:
-                    checkpoint['node_ids'] = partition.ndata['og_ids']
-                torch.save(checkpoint, best_path)
-
-            # Backward
-            student_optimizer.zero_grad()
-            student_train_loss.backward()
-            student_optimizer.step()
-
-            # print the current results
-            if i % 20 == 0:
-                print(
-                    'In epoch {}, student train loss: {:.3f}, student train acc: {:.3f}, student val loss: {:.3f}, student val acc: {:.3f} (best student val acc: {:.3f}))'.format(
-                        i, student_train_loss, student_train_acc, student_val_loss, student_val_acc, best_student_val_acc))
-
-
-        print("p", idx, " best teacher validation accuracy --> ", best_val_acc)
-        print("p", idx, " best student validation accuracy --> ", best_student_val_acc)
-        print("p", idx, " best student validation loss --> ", best_distillation_loss)
         end_time = time.perf_counter()
         print("end time: ", end_time)
         time_used = end_time - start_time
         print("time_used: " + str(time_used) + " seconds")
+        index = index + 1
+
+
+def train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx):
+    # graph parameters
+    features = partition.ndata['feat']
+    labels = partition.ndata['label']  # all labels
+    train_mask = partition.ndata['train_mask']
+    num_classes = dataset.num_classes
+
+    partition = partition.to(device)
+    features = features.to(device)
+    labels = labels.to(device)
+
+    # create a gnn for this partition using graph parameters
+    teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
+    student_model = load_student_model(args.gnn, features, num_classes, args.heads,
+                            args.dropout, args.compression_rate) 
+
+    # NEW ADDITION: count model params
+    print("# teacher params",sum(p.numel() for p in teacher_model.parameters() if p.requires_grad))
+    print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
+
+    teacher_model.to(device)
+    student_model.to(device)
+
+    # create the optimizer
+    optimizer = torch.optim.Adam(teacher_model.parameters(), lr=0.01)
+    student_optimizer = torch.optim.Adam(student_model.parameters(), lr=0.01)
+    best_val_acc = 0
+    best_path = 'none'
+
+    teacher_model.train()
+
+    # Initializing distillation loss
+    distillation_loss = 1000000000  # Very large number
+    best_distillation_loss = distillation_loss
+
+
+    # train the subgraph
+    for e in range(100):
+
+        # Forward
+        logits = teacher_model(partition, features)
+
+        # Compute prediction
+        pred = logits.argmax(1)
+
+        # Compute loss
+        # Note that you should only compute the losses of the nodes in the training set.
+        train_loss = F.cross_entropy(logits[train_mask], labels[train_mask])
+        writer.add_scalar("Loss/train", train_loss, e)
+
+        # Compute accuracy on training dataset
+        train_acc = (pred[train_mask] == labels[train_mask]).float().mean()
+        writer.add_scalar("Accuracy/train", train_acc, e)
+
+        # evaluate on the validation set
+        val_acc, val_loss = validate(teacher_model, partition)
+        writer.add_scalar("Loss/val", val_loss, e)
+        writer.add_scalar("Accuracy/val", val_acc, e)
+        
+        # Save the best validation accuracy and the corresponding model.
+        if best_val_acc < val_acc:
+            best_val_acc = val_acc.item()
+            best_path = 'saved_models/best_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth'
+            checkpoint = {
+                'epoch': e + 1,
+                'model_state_dict': teacher_model.state_dict(),
+                'val_acc': best_val_acc,
+                'partition_size': partition.num_nodes(),
+                'train_size': sum(partition.ndata['train_mask'] == True),
+                'val_size': sum(partition.ndata['val_mask'] == True),
+                'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
+                'val_mask': partition.ndata['val_mask'],
+                'test_mask': partition.ndata['test_mask'],
+                'args':args
+            }
+            if args.k > 1:
+                checkpoint['node_ids'] = partition.ndata['og_ids']
+            torch.save(checkpoint, best_path)
+
+        # Backward
+        optimizer.zero_grad()
+        train_loss.backward()
+        optimizer.step()
+
+        # print the current results
+        if e % 20 == 0:
+            print(
+                'In epoch {}, train loss: {:.3f}, train acc: {:.3f}, val loss: {:.3f}, val acc: {:.3f} (best val acc: {:.3f}))'.format(
+                    e, train_loss, train_acc, val_loss, val_acc, best_val_acc))
+
+# ########################################STUDENT MODEL STARTS##########################################################
+
+    # Obtain Distilled Model and logits
+    teacher_checkpoint = torch.load(best_path)
+    teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
+    teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
+    teacher_model.eval()
+    student_model.train()
+    teacher_model.to(device)
+
+    best_student_val_acc = 0
+
+    for i in range(100):
+
+        # Forward
+        logits = teacher_model(partition, features)
+        student_logits = student_model(partition, features)
+
+        # distillation_loss = abs(student_logits - logits)
+        alpha = 0.1
+        Temperature = 1
+        student_train_loss = loss_fn_kd(student_logits[train_mask], labels[train_mask], logits[train_mask], alpha, Temperature)
+
+        student_pred = student_logits.argmax(1)
+
+        # Compute loss
+        # Note that you should only compute the losses of the nodes in the training set.
+        # Compute accuracy on training dataset
+        student_train_acc = (student_pred[train_mask] == labels[train_mask]).float().mean()
+        writer.add_scalar("Loss/train", student_train_loss.item(), i)
+        writer.add_scalar("Accuracy/train", student_train_acc, i)
+
+        # evaluate on the validation set
+        student_val_acc, student_val_loss = student_validate(teacher_model, student_model, partition, alpha, Temperature)
+        student_val_loss = student_val_loss.item()
+        writer.add_scalar("Loss/val", student_val_loss, i)
+        writer.add_scalar("Accuracy/val", student_val_acc, i)
+
+        # Save the validation accuracy
+        #if best_distillation_loss > student_val_loss:
+        if best_student_val_acc < student_val_acc:
+            best_distillation_loss = student_val_loss
+            best_student_val_acc = student_val_acc.item()
+            best_path = 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth' 
+            checkpoint = {
+                'epoch': i + 1,
+                'model_state_dict': student_model.state_dict(),
+                'val_acc': best_student_val_acc,
+                'best_distillation_loss': best_distillation_loss,
+                'partition_size': partition.num_nodes(),
+                'train_size': sum(partition.ndata['train_mask'] == True),
+                'val_size': sum(partition.ndata['val_mask'] == True),
+                'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
+                'val_mask': partition.ndata['val_mask'],
+                'test_mask': partition.ndata['test_mask'],
+                'args':args
+            }
+            if args.k > 1:
+                checkpoint['node_ids'] = partition.ndata['og_ids']
+            torch.save(checkpoint, best_path)
+
+        # Backward
+        student_optimizer.zero_grad()
+        student_train_loss.backward()
+        student_optimizer.step()
+
+        # print the current results
+        if i % 20 == 0:
+            print(
+                'In epoch {}, student train loss: {:.3f}, student train acc: {:.3f}, student val loss: {:.3f}, student val acc: {:.3f} (best student val acc: {:.3f}))'.format(
+                    i, student_train_loss, student_train_acc, student_val_loss, student_val_acc, best_student_val_acc))
+
+
+    print("p", idx, " best teacher validation accuracy --> ", best_val_acc)
+    print("p", idx, " best student validation accuracy --> ", best_student_val_acc)
+    print("p", idx, " best student validation loss --> ", best_distillation_loss)
 
 # validation function
 def validate(model, partition):
