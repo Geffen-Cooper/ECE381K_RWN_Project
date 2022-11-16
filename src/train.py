@@ -263,9 +263,7 @@ def student_validate(model, student_model, partition, alpha, Temperature):
         return val_acc, val_loss
 
 
-
 # ================================ datasets =====================================
-
 def load_dataset(dataset):
     if dataset == "cora":
         return load_cora()
@@ -273,8 +271,8 @@ def load_dataset(dataset):
         return load_citeseer()
     elif dataset == "arxiv":
         return load_arxiv()
-    elif dataset == "proteins":
-        return load_ogbn_proteins()
+    elif dataset == "ogbn_products":
+        return load_ogbn_products()
 
 # ================================ models =====================================
 
@@ -314,7 +312,7 @@ def parse_args():
     # logging details
     parser.add_argument("--gnn",help="GNN architecture (GCN, GAT, GSAGE)",type=str, default="GCN")
     parser.add_argument("--k",help="how many partitions to split the input graph into",type=int, default=2)
-    parser.add_argument("--dataset",help="name of the dataset (cora, citeseeor,arxiv)",type=str, default="cora")
+    parser.add_argument("--dataset",help="name of the dataset (cora, citeseeor, arxiv, ogbn_products)",type=str, default="cora")
     parser.add_argument("--heads",help="If using GAT provide num_heads, otherwise enter 0",type=int, default=3)
     parser.add_argument("--dropout", help="Dropout rate. 1 - keep_probability = dropout rate", type=float, default=0.25)
     parser.add_argument("--no_cuda", help="If True then will disable CUDA training", type=bool, default=False)
