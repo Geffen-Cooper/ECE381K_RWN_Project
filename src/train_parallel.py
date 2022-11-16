@@ -64,13 +64,6 @@ def train(args):
         globals()["partition_%d"%idx] = partition
         
     
-    #while index < idx:
-    #    print("index: ", index)
-    #    print("\n partition 0: \n", partition_0)
-    #    print("\n partition 1: \n", partition_1)
-
-        #parallel_0 = multiprocessing.Process(target=train_parallel(partition, dataset, args))
-        #parallel_1 = multiprocessing.Process(target=train_parallel(partition))
     if args.k == 1:
         train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx)
     elif args.k == 2:
@@ -91,11 +84,11 @@ def train(args):
         parallel_2.start()
         parallel_3.start()
         parallel_4.start()
-        parallel_0.join()
-        parallel_1.join()
-        parallel_2.join()
-        parallel_3.join()
-        parallel_4.join()
+        #parallel_0.join()
+        #parallel_1.join()
+        #parallel_2.join()
+        #parallel_3.join()
+        #parallel_4.join()
     elif args.k == 10:
         parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
         parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
