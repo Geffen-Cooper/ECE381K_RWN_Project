@@ -1,9 +1,7 @@
-@profile
-def my_func():
-    a = [1] * (10 ** 6)
-    b = [2] * (2 * 10 ** 7)
-    del b
-    return a
+import torch
 
-if __name__ == '__main__':
-    my_func()
+a = torch.tensor([2., 3.], requires_grad=True)
+b = torch.tensor([6., 4.], requires_grad=True)
+
+Q = 3*a**3 - b**2
+

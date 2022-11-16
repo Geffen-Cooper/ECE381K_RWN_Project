@@ -2,27 +2,22 @@
 # Graph Neural Network Compression for Edge Devices
 # Mustafa Munir and Geffen Cooper
 
-import dgl
-import torch
-import torch.nn as nn
+from torch.nn import BatchNorm1d
+from torch.nn import Dropout
+from torch.nn import Module
 import torch.nn.functional as F
-import dgl.data
-import matplotlib.pyplot as plt
-import numpy as np
-import time
 
 from dgl.nn import GraphConv
-from dgl.data import load_data
 from dgl.nn.pytorch import GATConv
 from dgl.nn import SAGEConv
 
 
-class GCN(nn.Module):
+class GCN(Module):
     def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GCN, self).__init__()
         self.conv1 = GraphConv(in_feats, hidden_feats)
-        self.bn1 = torch.nn.BatchNorm1d(hidden_feats)
-        self.dropout = torch.nn.Dropout(p=dropout)
+        #self.bn1 = BatchNorm1d(hidden_feats)
+        self.dropout = Dropout(p=dropout)
         self.conv2 = GraphConv(hidden_feats, num_classes)
 
     def forward(self, g, in_feat):
@@ -35,7 +30,7 @@ class GCN(nn.Module):
 
 
 # GCN L1 STUDENT NOT USED
-class GCNStudent(nn.Module):
+class GCNStudent(Module):
     def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GCNStudent, self).__init__()
         self.conv1 = GraphConv(in_feats, num_classes)
@@ -45,12 +40,12 @@ class GCNStudent(nn.Module):
         h = F.relu(h)
         return h
 
-class GAT(nn.Module):
+class GAT(Module):
     def __init__(self, in_feats, hidden_feats, num_classes, num_heads, dropout):
         super(GAT, self).__init__()
         # print(in_feats, hidden_feats, num_heads)
         self.conv1 = GATConv(in_feats, hidden_feats, num_heads=int(num_heads))
-        self.dropout = torch.nn.Dropout(p=dropout)
+        self.dropout = Dropout(p=dropout)
         self.conv2 = GATConv(hidden_feats*int(num_heads), num_classes, 1)
 
     def forward(self, g, in_feat):
@@ -64,11 +59,11 @@ class GAT(nn.Module):
         return h
 
 
-class GraphSage(nn.Module):
+class GraphSage(Module):
     def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GraphSage, self).__init__()
         self.conv1 = SAGEConv(in_feats, hidden_feats, aggregator_type = "pool")
-        self.dropout = torch.nn.Dropout(p=dropout)
+        self.dropout = Dropout(p=dropout)
         self.conv2 = SAGEConv(hidden_feats, num_classes, aggregator_type = "pool")
 
     def forward(self, g, in_feat):

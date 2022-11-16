@@ -37,4 +37,5 @@ for idx, f in enumerate(flag_points[:num_flags]):
     else:
         plt.axvspan(flag_times[idx-1]-flag_times[1], flag_times[idx]-flag_times[1], alpha=0.3, color=cs[idx],label=f)
 plt.legend()
+plt.grid()
 plt.show()

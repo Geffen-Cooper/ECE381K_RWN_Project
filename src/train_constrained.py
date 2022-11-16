@@ -13,15 +13,20 @@ print("pre-import\n",time.time(),flush=True)
 time.sleep(1)
 
 import argparse
-import torch
-import torch.nn as nn
+from torch import no_grad,save,load
+from torch.nn import KLDivLoss
 import torch.nn.functional as F
+from torch.optim import Adam
 
-
+from graphviz import Digraph
+from torch.autograd import Variable
+import torch
 # our modules
 from models import *
 from datasets import *
 from partition_graph import *
+print("start-prog\n", time.time(),flush=True)
+time.sleep(1)
 
 def train(args):
     device = "cpu"
@@ -52,6 +57,10 @@ def train(args):
         #                            args.dropout, args.compression_rate) 
 
         # NEW ADDITION: count model params
+        i = 0
+        for p in teacher_model.parameters():
+            if p.requires_grad:
+                print(p.size())
         print("# teacher params",sum(p.numel() for p in teacher_model.parameters() if p.requires_grad))
         # print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
 
@@ -59,10 +68,10 @@ def train(args):
         # student_model.to(device)
 
         # create the optimizer
-        optimizer = torch.optim.Adam(teacher_model.parameters(), lr=0.01)
+        optimizer = Adam(teacher_model.parameters(), lr=0.01)
         print("load-model\n", time.time(),flush=True)
         time.sleep(1)
-        # student_optimizer = torch.optim.Adam(student_model.parameters(), lr=0.01)
+        # student_optimizer = Adam(student_model.parameters(), lr=0.01)
         best_val_acc = 0
         best_path = 'none'
 
@@ -77,7 +86,8 @@ def train(args):
         for e in range(100):
             # Forward
             logits = teacher_model(partition, features)
-            
+            g = make_dot(logits)
+            g.view()
             # Compute prediction
             pred = logits.argmax(1)
             print("forward\n", time.time(),flush=True)
@@ -111,7 +121,7 @@ def train(args):
                 }
                 if args.k > 1:
                     checkpoint['node_ids'] = partition.ndata['og_ids']
-                torch.save(checkpoint, best_path)
+                save(checkpoint, best_path)
             
             print("loss-val\n", time.time(),flush=True)
             time.sleep(1)
@@ -135,7 +145,7 @@ def train(args):
 # ########################################STUDENT MODEL STARTS##########################################################
 
         # # Obtain Distilled Model and logits
-        # teacher_checkpoint = torch.load(best_path)
+        # teacher_checkpoint = load(best_path)
         # teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
         # teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
         # teacher_model.eval()
@@ -187,7 +197,7 @@ def train(args):
         #         }
         #         if args.k > 1:
         #             checkpoint['node_ids'] = partition.ndata['og_ids']
-        #         torch.save(checkpoint, best_path)
+        #         save(checkpoint, best_path)
 
         #     # Backward
         #     student_optimizer.zero_grad()
@@ -204,7 +214,7 @@ def validate(model, partition):
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
 
-    with torch.no_grad():
+    with no_grad():
         # Forward
         logits = model(partition, features)
         pred = logits.argmax(1)
@@ -225,7 +235,7 @@ def student_validate(model, student_model, partition, alpha, Temperature):
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
 
-    with torch.no_grad():
+    with no_grad():
         # Forward
         logits = model(partition, features)
 
@@ -257,7 +267,7 @@ def load_dataset(dataset):
 def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, int(length*0.1), num_classes, dropout)
+        return GCN(length, int(length*0.005), num_classes, dropout)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, heads, dropout)
@@ -309,14 +319,69 @@ def loss_fn_kd(outputs, labels, teacher_outputs, alpha, Temperature):
     and student expects the input tensor to be log probabilities! See Issue #2
     """
     T = Temperature
-    KD_loss = nn.KLDivLoss()(F.log_softmax(outputs/T, dim=1),
+    KD_loss = KLDivLoss()(F.log_softmax(outputs/T, dim=1),
                              F.softmax(teacher_outputs/T, dim=1)) * (alpha * T * T) + \
               F.cross_entropy(outputs, labels) * (1. - alpha)
     return KD_loss
 
+
+
+
+
+
+
+
+
+
+
+
+def make_dot(var, params=None):
+    if params is not None:
+        assert isinstance(params.values()[0], Variable)
+        param_map = {id(v): k for k, v in params.items()}
+
+    node_attr = dict(style="filled", shape="box", align="left", fontsize="12", ranksep="0.1", height="0.2")
+    dot = Digraph(node_attr=node_attr, graph_attr=dict(size="12,12"))
+    seen = set()
+
+    def size_to_str(size):
+        return "(" + (", ").join(["%d" % v for v in size]) + ")"
+
+    def add_nodes(var):
+        if var not in seen:
+            if torch.is_tensor(var):
+                dot.node(str(id(var)), size_to_str(var.size()), fillcolor="orange")
+                dot.edge(str(id(var.grad_fn)), str(id(var)))
+                var = var.grad_fn
+            if hasattr(var, "variable"):
+                u = var.variable
+                name = param_map[id(u)] if params is not None else ""
+                node_name = "%s\n %s" % (name, size_to_str(u.size()))
+                dot.node(str(id(var)), node_name, fillcolor="lightblue")
+            else:
+                dot.node(str(id(var)), str(type(var).__name__))
+            seen.add(var)
+            if hasattr(var, "next_functions"):
+                for u in var.next_functions:
+                    if u[0] is not None:
+                        dot.edge(str(id(u[0])), str(id(var)))
+                        add_nodes(u[0])
+            if hasattr(var, "saved_tensors"):
+                for t in var.saved_tensors:
+                    dot.edge(str(id(t)), str(id(var)))
+                    add_nodes(t)
+
+    add_nodes(var)
+    return dot
+
+
+
+
+
+
 # ===================================== Main =====================================
 if __name__ == "__main__":
-    print("start-prog\n", time.time(),flush=True)
-    time.sleep(1)
+    # print("start-prog\n", time.time(),flush=True)
+    # time.sleep(1)
     args = parse_args()
     train(args)
