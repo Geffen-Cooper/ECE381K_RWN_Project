@@ -73,20 +73,25 @@ ARXIVDIFF=$(echo "$ENDARXIV - $ENDCITE" | bc)
 TOTAL=$(echo "$ENDARXIV - $START" | bc)
 echo cora $CORADIFF citeseer $CITEDIFF arxiv $ARXIVDIFF
 echo total $TOTAL
-# python train.py --gnn=GCN --k=1 --dataset=proteins --compression_rate=big
-# python train.py --gnn=GCN --k=2 --dataset=proteins --compression_rate=big
-# python train.py --gnn=GCN --k=5 --dataset=proteins --compression_rate=big 
-# python train.py --gnn=GCN --k=10 --dataset=proteins --compression_rate=big
-# python train.py --gnn=GCN --k=20 --dataset=proteins --compression_rate=big
+python train.py --gnn=GCN --k=1 --dataset=ogbn_products --compression_rate=big
+python train.py --gnn=GCN --k=2 --dataset=ogbn_products --compression_rate=big
+python train.py --gnn=GCN --k=5 --dataset=ogbn_products --compression_rate=big
+python train.py --gnn=GCN --k=10 --dataset=ogbn_products --compression_rate=big
+python train.py --gnn=GCN --k=20 --dataset=ogbn_products --compression_rate=big
 
-# python train.py --gnn=GCN --k=1 --dataset=proteins --compression_rate=medium
-# python train.py --gnn=GCN --k=2 --dataset=proteins --compression_rate=medium
-# python train.py --gnn=GCN --k=5 --dataset=proteins --compression_rate=medium
-# python train.py --gnn=GCN --k=10 --dataset=proteins --compression_rate=medium
-# python train.py --gnn=GCN --k=20 --dataset=proteins --compression_rate=medium
+python train.py --gnn=GCN --k=1 --dataset=ogbn_products --compression_rate=medium
+python train.py --gnn=GCN --k=2 --dataset=ogbn_products --compression_rate=medium
+python train.py --gnn=GCN --k=5 --dataset=ogbn_products --compression_rate=medium
+python train.py --gnn=GCN --k=10 --dataset=ogbn_products --compression_rate=medium
+python train.py --gnn=GCN --k=20 --dataset=ogbn_products --compression_rate=medium
 
-# python train.py --gnn=GCN --k=1 --dataset=proteins --compression_rate=small
-# python train.py --gnn=GCN --k=2 --dataset=proteins --compression_rate=small
-# python train.py --gnn=GCN --k=5 --dataset=proteins --compression_rate=small 
-# python train.py --gnn=GCN --k=10 --dataset=proteins --compression_rate=small
-# python train.py --gnn=GCN --k=20 --dataset=proteins --compression_rate=small
+python train.py --gnn=GCN --k=1 --dataset=ogbn_products --compression_rate=small
+python train.py --gnn=GCN --k=2 --dataset=ogbn_products --compression_rate=small
+python train.py --gnn=GCN --k=5 --dataset=ogbn_products --compression_rate=small
+python train.py --gnn=GCN --k=10 --dataset=ogbn_products --compression_rate=small
+python train.py --gnn=GCN --k=20 --dataset=ogbn_products --compression_rate=small
+
+ENDPRODUCTS=$(date +%s.%N)
+PRODUCTSDIFF=$(echo "$ENDPRODUCTS - $ENDARXIV" | bc)
+
+TOTAL=$(echo "$ENDPRODUCTS - $START" | bc)

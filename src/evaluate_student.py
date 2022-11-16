@@ -9,7 +9,7 @@ from models import *
 from train import *
 
 models = ["GCN"]#,"GAT","GSAGE"]
-ks = [1,2] #,5,10,20]
+ks = [1,2,5,10,20]
 datasets = ["cora"] #,"citeseer"]#,"arxiv"]
 compression_rates = ["medium"] #,"small", "big"
 
@@ -42,9 +42,10 @@ for dataset in datasets:
             for compression_rate in compression_rates:
                 for partition in range(k):
                     teacher_checkpoint_path = "saved_models/best_"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
-                    #student_checkpoint_path = "saved_models/best_student_validation"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
+
+                    # student_checkpoint_path = "saved_models/best_student_validation"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
                     studentmedium_checkpoint_path = "saved_models/best_student_validation_"+str(compression_rate)+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
-                    #student1L_checkpoint_path = "saved_models/best_student_validation1L"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
+                    # student1L_checkpoint_path = "saved_models/best_student_validation1L"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
                 
                     teacher_checkpoint = torch.load(teacher_checkpoint_path)
                     #student_checkpoint = torch.load(student_checkpoint_path)
