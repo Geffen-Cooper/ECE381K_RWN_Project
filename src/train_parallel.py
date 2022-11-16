@@ -36,8 +36,6 @@ def train(args):
     print("Number of partitions:", args.k)
     print("Dataset:", args.dataset)
     print("num_heads: ", args.heads)
-    start_time = time.perf_counter()
-    print("start time: ", start_time)
 
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
@@ -61,7 +59,7 @@ def train(args):
     for idx, partition in enumerate(partitions):
         print("idx: \n", idx)
         print("partition: \n", partition)
-        #globals()["partition_%d"%idx] = partition
+        globals()["partition_%d"%idx] = partition
         
     
     #while index < idx:
@@ -71,16 +69,20 @@ def train(args):
 
         #parallel_0 = multiprocessing.Process(target=train_parallel(partition, dataset, args))
         #parallel_1 = multiprocessing.Process(target=train_parallel(partition))
+    if args.k == 1:
         train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx)
-
-        end_time = time.perf_counter()
-        print("end time: ", end_time)
-        time_used = end_time - start_time
-        print("time_used: " + str(time_used) + " seconds")
-        index = index + 1
+    else: #elif args.k == 2:
+        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
+        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
+        parallel_0.start()
+        parallel_1.start()
+        parallel_0.join()
+        parallel_1.join()
 
 
 def train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx):
+    start_time = time.perf_counter()
+    print("start time: ", start_time)
     # graph parameters
     features = partition.ndata['feat']
     labels = partition.ndata['label']  # all labels
@@ -246,6 +248,10 @@ def train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx):
     print("p", idx, " best teacher validation accuracy --> ", best_val_acc)
     print("p", idx, " best student validation accuracy --> ", best_student_val_acc)
     print("p", idx, " best student validation loss --> ", best_distillation_loss)
+    end_time = time.perf_counter()
+    print("end time " + str(idx) + ": "+ str(end_time))
+    time_used = end_time - start_time
+    print("Total time_used: " + str(time_used) + " seconds")
 
 # validation function
 def validate(model, partition):
