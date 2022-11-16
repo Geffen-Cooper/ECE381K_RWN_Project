@@ -282,7 +282,7 @@ def load_dataset(dataset):
 def load_model(model, features, num_classes, heads, dropout):
     length = features.shape[1]
     if model == "GCN":
-        return GCN(length, length//2, num_classes, dropout)
+        return GCN(length, length, num_classes, dropout)
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
         return GAT(length, length//2, num_classes, heads, dropout)
@@ -294,11 +294,11 @@ def load_student_model(model, features, num_classes, heads, dropout, compression
     length = features.shape[1]
     if model == "GCN":
         if compression_rate == "big":
-            return GCN(length, int(length*0.02), num_classes, dropout)
+            return GCN(length, int(length*0.1), num_classes, dropout)
         elif compression_rate == "medium":
-            return GCN(length, int(length*.05), num_classes, dropout)
+            return GCN(length, int(length*.2), num_classes, dropout)
         else: # compression_rate == "small":
-            return GCN(length, int(length*.1), num_classes, dropout)
+            return GCN(length, int(length*.5), num_classes, dropout)
 
     elif model == "GAT":
         # return GATConv(length, num_classes, num_heads=3)
