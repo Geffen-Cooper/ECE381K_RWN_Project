@@ -381,7 +381,7 @@ def make_dot(var, params=None):
 
 # ===================================== Main =====================================
 if __name__ == "__main__":
-    # print("start-prog\n", time.time(),flush=True)
-    # time.sleep(1)
+    print("start-prog\n", time.time(),flush=True)
+    time.sleep(1)
     args = parse_args()
     train(args)
