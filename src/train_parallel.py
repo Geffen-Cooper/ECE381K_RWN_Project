@@ -40,6 +40,8 @@ def train(args):
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
     device = 'cpu' # To override to cpu
+    if device == 'cpu':
+        print("CPU cores count: " + str(multiprocessing.cpu_count()))
     print(device)
 
     # first load the dataset, split into k partitions
@@ -71,7 +73,39 @@ def train(args):
         #parallel_1 = multiprocessing.Process(target=train_parallel(partition))
     if args.k == 1:
         train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx)
-    else: #elif args.k == 2:
+    elif args.k == 2:
+        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
+        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
+        parallel_0.start()
+        parallel_1.start()
+        parallel_0.join()
+        parallel_1.join()
+    elif args.k == 5:
+        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
+        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
+        parallel_2 = multiprocessing.Process(target=train_parallel(partition_2, dataset, dataset_dgl, args, device, writer, 2))
+        parallel_3 = multiprocessing.Process(target=train_parallel(partition_3, dataset, dataset_dgl, args, device, writer, 3))
+        parallel_4 = multiprocessing.Process(target=train_parallel(partition_4, dataset, dataset_dgl, args, device, writer, 4))
+        parallel_0.start()
+        parallel_1.start()
+        parallel_2.start()
+        parallel_3.start()
+        parallel_4.start()
+        parallel_0.join()
+        parallel_1.join()
+        parallel_2.join()
+        parallel_3.join()
+        parallel_4.join()
+    elif args.k == 10:
+        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
+        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
+        parallel_0.start()
+        parallel_1.start()
+        parallel_0.join()
+        parallel_1.join()
+    else:
+        print(args.k)
+        print(type(args.k))
         parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
         parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
         parallel_0.start()
@@ -82,7 +116,7 @@ def train(args):
 
 def train_parallel(partition, dataset, dataset_dgl, args, device, writer, idx):
     start_time = time.perf_counter()
-    print("start time: ", start_time)
+    print("start time of process " + str(idx) + ": " + str(start_time))
     # graph parameters
     features = partition.ndata['feat']
     labels = partition.ndata['label']  # all labels
