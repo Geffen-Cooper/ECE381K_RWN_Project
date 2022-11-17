@@ -56,3 +56,175 @@ loss-val
 backwards
  1668632882.7070386
 1668632883.903822199
+=======
+1668641506.163501891
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+pre-import
+ 1668641507.18067
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+  9692
+   RES
+ 64572
+   RES
+180192
+   RES
+231468
+   RES
+266420
+   RES
+310856
+start-prog
+ 1668641508.8945136
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+319284
+   RES
+328008
+Namespace(gnn='GCN', k=1, dataset='cora', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+  NumNodes: 2708
+  NumEdges: 10556
+  NumFeats: 1433
+  NumClasses: 7
+  NumTrainingSamples: 140
+  NumValidationSamples: 500
+  NumTestSamples: 1000
+Done loading data from cached files.
+Number of categories: 7
+load-data
+ 1668641511.0357327
+   RES
+351880
+   RES
+351880
+   RES
+351880
+   RES
+351880
+   RES
+351880
+   RES
+351880
+   RES
+351880
+# teacher params 2064960
+load-model
+ 1668641512.0485742
+   RES
+358096
+   RES
+358096
+   RES
+358096
+   RES
+358096
+   RES
+358096
+   RES
+358096
+forward
+ 1668641513.099877
+   RES
+482664
+   RES
+482664
+   RES
+482664
+   RES
+482664
+   RES
+482664
+   RES
+482664
+   RES
+482664
+loss-val
+ 1668641514.1806574
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+   RES
+512360
+backwards
+ 1668641516.2609193
+   RES
+452328
+   RES
+452328
+   RES
+452328
+   RES
+452328
+   RES
+452328
+   RES
+452328
+   RES
+452328
+   RES
+     0
+   RES
+1668641517.575134960
+>>>>>>> 51da49fd1018b20be9acd3bbeaf14f35e9bbee72

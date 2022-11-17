@@ -1,6 +1,6 @@
 import time 
 time.sleep(1)
-print("pre-import\n",time.time())
+print("pre-import\n",time.time(),flush=True)
 time.sleep(1)
 
 import torch
@@ -11,22 +11,22 @@ time.sleep(1)
 a = torch.tensor([1.], requires_grad=True)
 b = torch.tensor([2.], requires_grad=True)
 y = torch.tensor([1])
-print("load-data\n", time.time())
+print("load-data\n", time.time(),flush=True)
 time.sleep(1)
 
-print("load-model\n", time.time())
+print("load-model\n", time.time(),flush=True)
 time.sleep(1)
 
 y_hat = a + b
-print("forward\n", time.time())
+print("forward\n", time.time(),flush=True)
 time.sleep(1)
 
 L = y-y_hat
-print("loss-val\n", time.time())
+print("loss-val\n", time.time(),flush=True)
 time.sleep(1)
 
 L.backward()
-print("backwards\n", time.time())
+print("backwards\n", time.time(),flush=True)
 time.sleep(1)
 
 # import torch
