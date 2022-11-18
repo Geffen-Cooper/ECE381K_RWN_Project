@@ -67,12 +67,8 @@ def train(args):
         
     
     if args.k == 1:
-        pool = multiprocessing.Pool(1)
-        pool.map(train_parallel, partitions)
-    elif args.k == 2:
         start_time = time.perf_counter()
         with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
-            # pool = multiprocessing.Pool(multiprocessing.cpu_count())
             func = partial(train_parallel, num_classes, args)
             pool.map(func, partitions)
             print("Intermediate debug statement")
@@ -81,28 +77,28 @@ def train(args):
         end_time = time.perf_counter()
         total_time = end_time - start_time
         print("Time used for all processes: ", total_time)
-        # parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
-        # parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
-        # parallel_0.start()
-        # parallel_1.start()
-        # parallel_0.join()
-        # parallel_1.join()
+    elif args.k == 2:
+        start_time = time.perf_counter()
+        with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
+            func = partial(train_parallel, num_classes, args)
+            pool.map(func, partitions)
+            print("Intermediate debug statement")
+            pool.close()
+            pool.join()
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print("Time used for all processes: ", total_time)
     elif args.k == 5:
-        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
-        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
-        parallel_2 = multiprocessing.Process(target=train_parallel(partition_2, dataset, dataset_dgl, args, device, writer, 2))
-        parallel_3 = multiprocessing.Process(target=train_parallel(partition_3, dataset, dataset_dgl, args, device, writer, 3))
-        parallel_4 = multiprocessing.Process(target=train_parallel(partition_4, dataset, dataset_dgl, args, device, writer, 4))
-        parallel_0.start()
-        parallel_1.start()
-        parallel_2.start()
-        parallel_3.start()
-        parallel_4.start()
-        #parallel_0.join()
-        #parallel_1.join()
-        #parallel_2.join()
-        #parallel_3.join()
-        #parallel_4.join()
+        start_time = time.perf_counter()
+        with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
+            func = partial(train_parallel, num_classes, args)
+            pool.map(func, partitions)
+            print("Intermediate debug statement")
+            pool.close()
+            pool.join()
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print("Time used for all processes: ", total_time)
     elif args.k == 10:
         parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
         parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
