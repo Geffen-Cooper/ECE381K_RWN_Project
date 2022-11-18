@@ -22,7 +22,7 @@ from ogb.nodeproppred import DglNodePropPredDataset
 from torch.utils.tensorboard import SummaryWriter
 import os
 import time
-import multiprocessing
+from torch import multiprocessing
 from functools import partial
 
 # our modules
@@ -71,12 +71,13 @@ def train(args):
         pool.map(train_parallel, partitions)
     elif args.k == 2:
         start_time = time.perf_counter()
-        pool = multiprocessing.Pool(2)
-        func = partial(train_parallel, num_classes)
-        pool.map(func, partitions)
-        print("Intermediate debug statement")
-        pool.close()
-        pool.join()
+        with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
+            # pool = multiprocessing.Pool(multiprocessing.cpu_count())
+            func = partial(train_parallel, num_classes, args)
+            pool.map(func, partitions)
+            print("Intermediate debug statement")
+            pool.close()
+            pool.join()
         end_time = time.perf_counter()
         total_time = end_time - start_time
         print("Time used for all processes: ", total_time)
@@ -121,9 +122,9 @@ def train(args):
 
 
 # def train_parallel(partitions, dataset, dataset_dgl, args, device, writer, idx):
-def train_parallel(num_classes, partition):
+def train_parallel(num_classes, args, partition):
     start_time = time.perf_counter()
-    print("start time of parallel process: ", start_time)
+    print("\n\n start time of parallel process: ", start_time)
     print("partitions function: \n", partition)
     # init tensorboard
     writer = SummaryWriter()
@@ -164,15 +165,15 @@ def train_parallel(num_classes, partition):
 
     # # train the subgraph
     for e in range(100):
-        print(e)
-        print(id(teacher_model))
+        print("e: ", e)
+        print("teacher ID: ", id(teacher_model))
         print("ID partition: ", id(partition))
         print("ID feature: ", id(features))
         # Forward
         logits = teacher_model(partition, features)
 
         # Compute prediction
-        pred = logits.argmax(1)
+    #    pred = logits.argmax(1)
 
     #     # Compute loss
     #     # Note that you should only compute the losses of the nodes in the training set.

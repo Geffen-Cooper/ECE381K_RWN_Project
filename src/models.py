@@ -22,7 +22,7 @@ class GCN(Module):
 
     def forward(self, g, in_feat):
         print("running forward")
-        print(id(self))
+        print("self id forward: ", id(self))
         h = self.conv1(g, in_feat)
         print("running conv1")
         #h = self.bn1(h)
