@@ -21,17 +21,17 @@ class GCN(Module):
         self.conv2 = GraphConv(hidden_feats, num_classes)
 
     def forward(self, g, in_feat):
-        print("running forward")
-        print("self id forward: ", id(self))
+        # print("running forward")
+        # print("self id forward: ", id(self))
         h = self.conv1(g, in_feat)
-        print("running conv1")
+        # print("running conv1")
         #h = self.bn1(h)
         h = F.relu(h)
-        print("running relu")
+        # print("running relu")
         h = self.dropout(h)
-        print("running dropout")
+        # print("running dropout")
         h = self.conv2(g, h)
-        print("running conv2")
+        # print("running conv2")
         return h
 
 
