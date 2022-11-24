@@ -8,8 +8,8 @@ import torch
 print("start-prog\n", time.time())
 time.sleep(1)
 
-a = torch.tensor([1.], requires_grad=True)
-b = torch.tensor([2.], requires_grad=True)
+a = torch.rand((2000,2000), requires_grad=True)
+b = torch.rand((2000,2000), requires_grad=True)
 y = torch.tensor([1])
 print("load-data\n", time.time(),flush=True)
 time.sleep(1)
@@ -17,7 +17,7 @@ time.sleep(1)
 print("load-model\n", time.time(),flush=True)
 time.sleep(1)
 
-y_hat = a + b
+y_hat = torch.mean(a + b)
 print("forward\n", time.time(),flush=True)
 time.sleep(1)
 
