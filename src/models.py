@@ -16,7 +16,7 @@ class GCN(Module):
     def __init__(self, in_feats, hidden_feats, num_classes, dropout):
         super(GCN, self).__init__()
         self.conv1 = GraphConv(in_feats, hidden_feats)
-        #self.bn1 = BatchNorm1d(hidden_feats)
+        # self.bn1 = BatchNorm1d(hidden_feats)
         self.dropout = Dropout(p=dropout)
         self.conv2 = GraphConv(hidden_feats, num_classes)
 

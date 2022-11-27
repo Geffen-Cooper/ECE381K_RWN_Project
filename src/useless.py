@@ -8,8 +8,8 @@ import torch
 print("start-prog\n", time.time())
 time.sleep(1)
 
-a = torch.rand((2000,2000), requires_grad=True)
-b = torch.rand((2000,2000), requires_grad=True)
+a = torch.rand((20,20), requires_grad=True)
+b = torch.rand((20,20), requires_grad=True)
 y = torch.tensor([1])
 print("load-data\n", time.time(),flush=True)
 time.sleep(1)
@@ -25,7 +25,7 @@ L = y-y_hat
 print("loss-val\n", time.time(),flush=True)
 time.sleep(1)
 
-L.backward()
+# L.backward()
 print("backwards\n", time.time(),flush=True)
 time.sleep(1)
 

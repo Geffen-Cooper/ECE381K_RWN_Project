@@ -4,8 +4,9 @@ num_flags = 9
 flag_points = ["end","proc-start","pre-import","start-prog","load-data","load-model","forward","loss-val","backwards"]
 cs = ['k','k','c','g','b','m','y','g','r']
 flag_times = []
+t = [0]
 
-with open("logs/test.txt") as file:
+with open("logs/log_k1.txt") as file:
     lines = [line.rstrip() for line in file]
 
 
@@ -21,8 +22,9 @@ for flag in flag_points[2:num_flags]:
 
 mems = []
 for idx,line in enumerate(lines):
-    if line.strip() == "RES" and idx+1 < len(lines):
+    if line.strip() == "RES" and idx+2 < len(lines):
         m = lines[idx+1].strip()
+        t.append(float(lines[idx+2].strip())-flag_times[1])
         if m[-1].isdigit():
             mems.append(float(m)/1000000)
         elif m[-1] == "m":
@@ -30,9 +32,7 @@ for idx,line in enumerate(lines):
         elif m[-1] == "g":
             mems.append(float(m[:-1]))
 
-t = [0]
-for idx,line in enumerate(mems):
-    t.append(t[idx]+0.15)
+print(t)
 plt.plot(t[:-1],mems)
 plt.xlabel("sec")
 plt.ylabel("GB")
