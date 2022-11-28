@@ -86,9 +86,20 @@ def load_ogbn_products():
 
     print('Number of categories:', dataset.num_classes)
 
-    products_nx = dgl.to_networkx(products_dgl)
+    # products_nx = dgl.to_networkx(products_dgl)
+    adj = products_dgl.adj()
+    print(len(adj))
+    # exit()
+    al= []
+    import time
+    s = time.time()
+    for idx in range(len(adj)):
+        al.append(adj[idx].coalesce().indices()[0].tolist())
+        if idx == 100:
+            print(time.time()-s)
+            exit()
     print("loaded ogbn products\n")
-    return products_nx, products_dgl, dataset
+    return al, products_dgl, dataset
 
 
 

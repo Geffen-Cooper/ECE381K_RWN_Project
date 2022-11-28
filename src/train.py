@@ -38,6 +38,7 @@ def train(args):
 
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
+    # device = 'cpu'
     print(device)
 
     # first load the dataset, split into k partitions
@@ -160,6 +161,7 @@ def train(args):
             logits = teacher_model(partition, features)
             student_logits = student_model(partition, features)
 
+
             # distillation_loss = abs(student_logits - logits)
             alpha = 0.1
             Temperature = 1
@@ -229,6 +231,8 @@ def validate(model, partition):
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
 
+
+
     with torch.no_grad():
         # Forward
         logits = model(partition, features)
@@ -249,6 +253,9 @@ def student_validate(model, student_model, partition, alpha, Temperature):
     features = partition.ndata['feat']
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
+
+    
+
 
     with torch.no_grad():
         # Forward
