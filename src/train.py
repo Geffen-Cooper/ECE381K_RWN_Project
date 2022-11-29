@@ -30,6 +30,7 @@ from partition_graph import *
 
 
 def train(args):
+    start_time =  time.perf_counter()
     print("training configuration:")
     print("Model: ", args.gnn)
     print("Number of partitions:", args.k)
@@ -38,6 +39,7 @@ def train(args):
 
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
+    device = 'cpu'
     print(device)
 
     # first load the dataset, split into k partitions
@@ -218,6 +220,9 @@ def train(args):
         print("p", idx, " best teacher validation accuracy --> ", best_val_acc)
         print("p", idx, " best student validation accuracy --> ", best_student_val_acc)
         print("p", idx, " best student validation loss --> ", best_distillation_loss)
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print("Total time: ", total_time)
 
 # validation function
 def validate(model, partition):
