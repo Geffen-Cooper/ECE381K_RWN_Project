@@ -1,5 +1,5 @@
-1. Determine if accuracy calculations are correct in evaluate or if bug in train.py.
-2. Once results are confirmed run on citeseer, arxiv, ogbn_proteins and document results.
+1. memory profiling
+2. run training/inference in parallel
 3. Aggregate the results from the partitions to possibly improve accuracy matching the
  original teacher model.
 4. Now we have partitioned into subragphs, trained subgraph GNNs, distilled knowledge

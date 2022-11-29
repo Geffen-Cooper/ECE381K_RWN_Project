@@ -8,9 +8,10 @@
 # Mustafa Munir and Geffen Cooper
 
 import time 
-time.sleep(1)
-print("pre-import\n",time.time(),flush=True)
-time.sleep(1)
+# time.sleep(1)
+t = time.time()
+print("pre-import\n",t,flush=True)
+# time.sleep(1)
 
 import argparse
 from torch import no_grad,save,load
@@ -25,7 +26,8 @@ import torch
 from models import *
 from datasets import *
 from partition_graph import *
-print("start-prog\n", time.time(),flush=True)
+t = time.time()
+print("start-prog\n", t,flush=True)
 time.sleep(1)
 
 def train(args):
@@ -37,7 +39,8 @@ def train(args):
         partitions = [dataset_dgl]
     else:
         partitions, parts_tensor = partition_network(args.k, dataset_nx, dataset_dgl)
-    print("load-data\n", time.time(),flush=True)
+    t = time.time()
+    print("load-data\n", t,flush=True)
     time.sleep(1)
     # training each partition
     for idx, partition in enumerate(partitions):
@@ -65,7 +68,8 @@ def train(args):
 
         # create the optimizer
         optimizer = Adam(teacher_model.parameters(), lr=0.01)
-        print("load-model\n", time.time(),flush=True)
+        t = time.time()
+        print("load-model\n", t,flush=True)
         time.sleep(1)
         # student_optimizer = Adam(student_model.parameters(), lr=0.01)
         best_val_acc = 0
@@ -86,7 +90,8 @@ def train(args):
             # g.view()
             # Compute prediction
             pred = logits.argmax(1)
-            print("forward\n", time.time(),flush=True)
+            t = time.time()
+            print("forward\n", t,flush=True)
             time.sleep(1)
 
             # Compute loss
@@ -119,15 +124,17 @@ def train(args):
                     checkpoint['node_ids'] = partition.ndata['og_ids']
                 save(checkpoint, best_path)
             
-            print("loss-val\n", time.time(),flush=True)
-            time.sleep(2)
+            t = time.time()
+            print("loss-val\n", t,flush=True)
+            time.sleep(1)
             
 
             # Backward
             optimizer.zero_grad()
             train_loss.backward()
             optimizer.step()
-            print("backwards\n", time.time(),flush=True)
+            t = time.time()
+            print("backwards\n", t,flush=True)
             time.sleep(1)
             exit()
             
@@ -378,6 +385,6 @@ def make_dot(var, params=None):
 # ===================================== Main =====================================
 if __name__ == "__main__":
     # print("start-prog\n", time.time(),flush=True)
-    time.sleep(1)
+    # time.sleep(1)
     args = parse_args()
     train(args)
