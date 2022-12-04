@@ -1,5 +1,5 @@
 '''
-    This file parses the memor profiling log and
+    This file parses the memory profiling log and
     creates a plot to visualize the usage over time
 '''
 

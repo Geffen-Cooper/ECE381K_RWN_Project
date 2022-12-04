@@ -23,7 +23,7 @@ def create_partitions(args):
 
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset)
-
+    
     if args.k == 1:
         partitions = [dataset_dgl]
     else:

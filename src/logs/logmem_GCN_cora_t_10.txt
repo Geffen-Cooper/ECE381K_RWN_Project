@@ -1,0 +1,123 @@
+1670187482.869578461
+   RES
+121468
+1670187483.025936926
+   RES
+208252
+1670187483.178874870
+   RES
+243964
+1670187483.331627583
+   RES
+278000
+1670187483.484333458
+   RES
+287092
+1670187483.637085328
+   RES
+319444
+1670187483.789954563
+   RES
+344856
+1670187483.942818251
+   RES
+385840
+1670187484.095489661
+   RES
+659840
+1670187484.248524861
+   RES
+987088
+1670187484.402009328
+   RES
+  1.2g
+1670187484.555349147
+   RES
+  1.5g
+1670187484.708344352
+   RES
+  1.7g
+1670187484.861191256
+   RES
+  1.8g
+1670187485.014311009
+   RES
+  2.1g
+1670187485.167564945
+   RES
+  2.5g
+1670187485.320508221
+   RES
+  2.8g
+1670187485.473531657
+   RES
+  2.9g
+1670187485.626498761
+   RES
+  2.9g
+1670187485.779455223
+   RES
+  2.9g
+1670187485.932437617
+   RES
+  2.9g
+1670187486.085427959
+   RES
+  2.9g
+1670187486.238307528
+   RES
+  2.9g
+1670187486.391479841
+=================
+Namespace(gnn='GCN', k=10, dataset='cora', heads=3, dropout=0.25, no_cuda=False, student_only='y', compression_rate='Big')
+=================== y
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: cora
+num_heads:  3
+cuda
+  NumNodes: 2708
+  NumEdges: 10556
+  NumFeats: 1433
+  NumClasses: 7
+  NumTrainingSamples: 140
+  NumValidationSamples: 500
+  NumTestSamples: 1000
+Done loading data from cached files.
+Number of categories: 7
+partitioning  10  subgraphs
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+# teacher params 2064960
+# student params 1031763
+In epoch 0, student train loss: 1.773, student train acc: 0.312, student val loss: 1.767, student val acc: 0.048 (best student val acc: 0.048))
+In epoch 20, student train loss: 0.008, student train acc: 1.000, student val loss: 1.661, student val acc: 0.500 (best student val acc: 0.595))
+In epoch 40, student train loss: 0.009, student train acc: 1.000, student val loss: 2.355, student val acc: 0.500 (best student val acc: 0.595))
+In epoch 60, student train loss: 0.008, student train acc: 1.000, student val loss: 2.188, student val acc: 0.548 (best student val acc: 0.595))
+In epoch 80, student train loss: 0.007, student train acc: 1.000, student val loss: 1.966, student val acc: 0.571 (best student val acc: 0.595))
+   RES
+  2.9g
+1670187486.544485113
+   RES
+     0
+1670187486.697417828
+   RES
+1670187486.850437147
+1670187486.851226201
