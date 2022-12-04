@@ -73,6 +73,10 @@ def train(args):
         teacher_optimizers.append(copy.deepcopy(optimizer))
         # student_models.append(copy.deepcopy(student_model))
 
+    # print(teacher_models[0].state_dict())
+    # print(teacher_models[1].state_dict())
+    # exit()
+
     # training each partition
     for idx, partition in enumerate(partitions):
         # graph parameters
@@ -119,7 +123,7 @@ def train(args):
     e = 0
     for e1 in range(25):
         for idx, partition in enumerate(partitions):
-            if e1 == 0:
+            if False:#e1 == 0:
                 teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
                 
                 teacher_model.to(device)
@@ -208,24 +212,24 @@ def train(args):
 
             
         # now aggregate
-        # for idx, partition in enumerate(partitions):
-        #     # load model
-        #     best_path = 'saved_models_agg/best_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth'
-        #     teacher_checkpoint = torch.load(best_path)
-        #     teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
-        #     teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
-        #     # load other models
-        #     for i,key in enumerate(teacher_model.state_dict()):
-        #         for idx_other, partition_other in enumerate(partitions):
-        #             if idx == idx_other and args.k > 1:
-        #                 teacher_model.state_dict()[key] *= 0.5
-        #             else:
-        #                 # load teacher model
-        #                 best_path_other = 'saved_models_agg/best_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx_other + 1) + '_k' + str(args.k) + '.pth'
-        #                 teacher_checkpoint_other = torch.load(best_path)
-        #                 teacher_model_other = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
-        #                 teacher_model_other.load_state_dict(teacher_checkpoint_other['model_state_dict'])
-        #                 teacher_model.state_dict()[key] += (teacher_model_other.state_dict()[key]/args.k)*.5
+        for idx, partition in enumerate(partitions):
+            # load model
+            best_path = 'saved_models_agg/best_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth'
+            teacher_checkpoint = torch.load(best_path)
+            teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
+            teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
+            # load other models
+            for i,key in enumerate(teacher_model.state_dict()):
+                for idx_other, partition_other in enumerate(partitions):
+                    if idx == idx_other and args.k > 1:
+                        teacher_model.state_dict()[key] /= args.k
+                    else:
+                        # load teacher model
+                        best_path_other = 'saved_models_agg/best_' + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx_other + 1) + '_k' + str(args.k) + '.pth'
+                        teacher_checkpoint_other = torch.load(best_path)
+                        teacher_model_other = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
+                        teacher_model_other.load_state_dict(teacher_checkpoint_other['model_state_dict'])
+                        teacher_model.state_dict()[key] += (teacher_model_other.state_dict()[key]/args.k)
                 
     # print('(best val acc: {:.3f})'.format(best_val_acc))
 

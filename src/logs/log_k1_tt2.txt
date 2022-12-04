@@ -1,0 +1,44 @@
+1669824379.693473108
+   RES
+120916
+1669824379.847823267
+   RES
+208636
+1669824380.000613134
+   RES
+244984
+1669824380.153537746
+   RES
+289828
+1669824380.306395456
+   RES
+320632
+1669824380.459093434
+   RES
+647432
+1669824380.614550366
+   RES
+  1.0g
+1669824380.769660213
+Namespace(gnn='GCN', k=1, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+LOAD ARXIV
+cuda
+DglNodePropPredDataset(1)
+------
+ (Graph(num_nodes=169343, num_edges=1166243,
+      ndata_schemes={'year': Scheme(shape=(1,), dtype=torch.int64), 'feat': Scheme(shape=(128,), dtype=torch.float32)}
+      edata_schemes={}), tensor([[ 4],
+        [ 5],
+        [28],
+        ...,
+        [10],
+        [ 4],
+        [ 1]]))
+Number of categories: 40
+# teacher params 21672
+   RES
+432420
+1669824380.922701903
+   RES
+1669824381.078677884
+1669824381.082419870

@@ -6,7 +6,12 @@
 # ECE381K RWN Project
 # Graph Neural Network Compression for Edge Devices
 # Mustafa Munir and Geffen Cooper
+import time
 
+time.sleep(0)
+t = time.time()
+print("pre-import\n",t,flush=True)
+time.sleep(0)
 import argparse
 import dgl
 import torch
@@ -21,7 +26,7 @@ import numpy as np
 from ogb.nodeproppred import DglNodePropPredDataset
 from torch.utils.tensorboard import SummaryWriter
 import os
-import time
+
 import copy 
 
 # our modules
@@ -29,6 +34,9 @@ from models import *
 from datasets import *
 from partition_graph import *
 
+t = time.time()
+print("import\n", t,flush=True)
+time.sleep(0)
 
 def train(args):
     print("training configuration:")
@@ -46,6 +54,7 @@ def train(args):
     subgraph_path = 'graph_partitions/' + str(args.dataset) + '_p' + str(args.i) + '_k' + str(args.k) + '.bin'
     partition = dgl.load_graphs(subgraph_path)[0][0]
 
+    
     # init tensorboard
     writer = SummaryWriter()
 
@@ -68,41 +77,50 @@ def train(args):
     partition = partition.to(device)
     features = features.to(device)
     labels = labels.to(device)
+    t = time.time()
+    print("load-data\n", t,flush=True)
+    time.sleep(0)
 
     # create a gnn for this partition using graph parameters
-    teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
+    # teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
     student_model = load_student_model(args.gnn, features, num_classes, args.heads,
-                                args.dropout, args.compression_rate) 
+                             args.dropout, args.compression_rate) 
 
     # NEW ADDITION: count model params
-    print("# teacher params",sum(p.numel() for p in teacher_model.parameters() if p.requires_grad))
-    print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
+    # print("# teacher params",sum(p.numel() for p in teacher_model.parameters() if p.requires_grad))
+    # print("# student params",sum(p.numel() for p in student_model.parameters() if p.requires_grad))
 
-    teacher_model.to(device)
+    # teacher_model.to(device)
     student_model.to(device)
 
     # create the optimizer
-    optimizer = torch.optim.Adam(teacher_model.parameters(), lr=0.01)
-    student_optimizer = torch.optim.Adam(student_model.parameters(), lr=0.01)
+    # optimizer = torch.optim.Adam(teacher_model.parameters(), lr=0.01)
+    # student_optimizer = torch.optim.Adam(student_model.parameters(), lr=0.01)
     best_val_acc = 0
     best_path = 'none'
 
-    teacher_model.train()
+    # teacher_model.train()
 
     # Initializing distillation loss
     distillation_loss = 1000000000  # Very large number
     best_distillation_loss = distillation_loss
-
+    t = time.time()
+    print("load-model\n", t,flush=True)
+    time.sleep(0)
 
     # train the subgraph
     for e in range(100):
 
         # Forward
-        logits = teacher_model(partition, features)
+        # logits = teacher_model(partition, features)
+        logits = student_model(partition, features)
 
         # Compute prediction
         pred = logits.argmax(1)
-
+        t = time.time()
+        print("forward\n", t,flush=True)
+        time.sleep(0)
+        exit()
         # Compute loss
         # Note that you should only compute the losses of the nodes in the training set.
         train_loss = F.cross_entropy(logits[train_mask], labels[train_mask])

@@ -1,0 +1,897 @@
+1669770404.242289802
+=================
+Namespace(k=10, dataset='arxiv')
+training configuration:
+Number of partitions: 10
+Dataset: arxiv
+LOAD ARXIV
+cuda
+DglNodePropPredDataset(1)
+------
+ (Graph(num_nodes=169343, num_edges=1166243,
+      ndata_schemes={'year': Scheme(shape=(1,), dtype=torch.int64), 'feat': Scheme(shape=(128,), dtype=torch.float32)}
+      edata_schemes={}), tensor([[ 4],
+        [ 5],
+        [28],
+        ...,
+        [10],
+        [ 4],
+        [ 1]]))
+Number of categories: 40
+partitioning  10  subgraphs
+   RES
+ 81576
+1669770456.240484326
+   RES
+129652
+1669770456.394370075
+   RES
+196548
+1669770456.548537134
+   RES
+210676
+1669770456.702631430
+   RES
+230140
+1669770456.856509409
+   RES
+250272
+1669770457.010534369
+   RES
+268988
+1669770457.164904668
+   RES
+275896
+1669770457.320119869
+   RES
+279372
+1669770457.476152659
+   RES
+281360
+1669770457.631366405
+   RES
+282476
+1669770457.787658365
+   RES
+292004
+1669770457.946078354
+   RES
+307180
+1669770458.101911008
+   RES
+321312
+1669770458.262577612
+   RES
+328852
+1669770458.423790452
+   RES
+328852
+1669770458.582460455
+   RES
+338192
+1669770458.741984609
+   RES
+394116
+1669770458.902126020
+   RES
+424228
+1669770459.066151854
+   RES
+433592
+1669770459.229174169
+   RES
+451208
+1669770459.391076222
+   RES
+485500
+1669770459.551106366
+   RES
+477828
+1669770459.711044662
+   RES
+477828
+1669770459.874477656
+   RES
+502112
+1669770460.036618473
+   RES
+502376
+1669770460.199582462
+   RES
+502376
+1669770460.362160351
+   RES
+463788
+1669770460.527004792
+   RES
+436368
+1669770460.689890205
+   RES
+436368
+1669770460.854221321
+   RES
+436628
+1669770461.015631362
+   RES
+436624
+1669770461.177958718
+   RES
+452732
+1669770461.342379233
+   RES
+463820
+1669770461.517201371
+   RES
+461244
+1669770461.689199229
+   RES
+494240
+1669770461.863916070
+   RES
+494240
+1669770462.025333067
+   RES
+477828
+1669770462.189669435
+   RES
+478088
+1669770462.356666331
+   RES
+477832
+1669770462.519709998
+   RES
+477832
+1669770462.681909299
+   RES
+478092
+1669770462.842911632
+   RES
+478088
+1669770463.002778505
+   RES
+477832
+1669770463.162914580
+   RES
+485220
+1669770463.321455258
+   RES
+485388
+1669770463.481136634
+   RES
+493572
+1669770463.645662106
+   RES
+493572
+1669770463.808867309
+   RES
+494100
+1669770463.972600728
+   RES
+494020
+1669770464.135720898
+   RES
+469016
+1669770464.298639847
+   RES
+485600
+1669770464.458734356
+   RES
+477568
+1669770464.621426558
+   RES
+477568
+1669770464.784898527
+   RES
+477312
+1669770464.948373185
+   RES
+477312
+1669770465.112531637
+   RES
+482728
+1669770465.272635072
+   RES
+490644
+1669770465.433863992
+   RES
+490644
+1669770465.600511903
+   RES
+490644
+1669770465.763799134
+   RES
+490644
+1669770465.923806314
+   RES
+490644
+1669770466.085156425
+   RES
+491172
+1669770466.246683399
+   RES
+491160
+1669770466.411391645
+   RES
+490904
+1669770466.570938251
+   RES
+493148
+1669770466.731542347
+   RES
+470896
+1669770466.893362143
+   RES
+470896
+1669770467.052184849
+   RES
+471424
+1669770467.211877432
+   RES
+471388
+1669770467.371347180
+   RES
+495944
+1669770467.530363218
+   RES
+504656
+1669770467.691541247
+   RES
+504560
+1669770467.849843414
+   RES
+504304
+1669770468.009354036
+   RES
+488108
+1669770468.168702489
+   RES
+488104
+1669770468.330994053
+   RES
+488104
+1669770468.489586285
+   RES
+462964
+1669770468.648905516
+   RES
+471516
+1669770468.808261908
+   RES
+471516
+1669770468.968477866
+   RES
+471516
+1669770469.129197212
+   RES
+493952
+1669770469.289136876
+   RES
+463224
+1669770469.450213955
+   RES
+463228
+1669770469.609638858
+   RES
+471144
+1669770469.769373645
+   RES
+462988
+1669770469.930101920
+   RES
+462984
+1669770470.090635049
+   RES
+462984
+1669770470.253758358
+   RES
+462984
+1669770470.412952935
+   RES
+510760
+1669770470.573051204
+   RES
+470500
+1669770470.731735530
+   RES
+470500
+1669770470.893097517
+   RES
+495052
+1669770471.053806063
+   RES
+503500
+1669770471.215410305
+   RES
+503500
+1669770471.374900304
+   RES
+503324
+1669770471.537476693
+   RES
+511768
+1669770471.697742641
+   RES
+511768
+1669770471.856551217
+   RES
+511768
+1669770472.020121344
+   RES
+511328
+1669770472.179090457
+   RES
+494492
+1669770472.338332783
+   RES
+495000
+1669770472.495647472
+   RES
+495000
+1669770472.657413487
+   RES
+503180
+1669770472.819901750
+   RES
+511628
+1669770472.980694814
+   RES
+511588
+1669770473.138165861
+   RES
+514752
+1669770473.297140592
+   RES
+520032
+1669770473.459673756
+   RES
+519880
+1669770473.618031636
+   RES
+519880
+1669770473.777447026
+   RES
+519876
+1669770473.939624534
+   RES
+502968
+1669770474.101296787
+   RES
+511148
+1669770474.261568381
+   RES
+511136
+1669770474.420302994
+   RES
+527500
+1669770474.582626787
+   RES
+527764
+1669770474.744627575
+   RES
+527720
+1669770474.900812721
+   RES
+527720
+1669770475.060302315
+   RES
+527720
+1669770475.224535878
+   RES
+527720
+1669770475.383161006
+   RES
+527720
+1669770475.541717345
+   RES
+527460
+1669770475.701303290
+   RES
+507896
+1669770475.859909379
+   RES
+508156
+1669770476.018537298
+   RES
+507900
+1669770476.179680522
+   RES
+491312
+1669770476.341576975
+   RES
+491568
+1669770476.498887399
+   RES
+491312
+1669770476.656385882
+   RES
+491312
+1669770476.814943470
+   RES
+491312
+1669770476.974607881
+   RES
+491572
+1669770477.132164968
+   RES
+491308
+1669770477.291225147
+   RES
+485796
+1669770477.450711655
+   RES
+494772
+1669770477.610388342
+   RES
+494296
+1669770477.769642680
+   RES
+502476
+1669770477.929654629
+   RES
+503004
+1669770478.095439416
+   RES
+502844
+1669770478.256686796
+   RES
+486916
+1669770478.415402934
+   RES
+502340
+1669770478.573988491
+   RES
+502340
+1669770478.734550566
+   RES
+494044
+1669770478.894682697
+   RES
+494044
+1669770479.052653463
+   RES
+494572
+1669770479.211898568
+   RES
+494548
+1669770479.374742032
+   RES
+502472
+1669770479.532111599
+   RES
+503000
+1669770479.690202612
+   RES
+502844
+1669770479.851074654
+   RES
+502588
+1669770480.013192816
+   RES
+494424
+1669770480.178348067
+   RES
+494680
+1669770480.337741768
+   RES
+494424
+1669770480.497156784
+   RES
+510788
+1669770480.657102754
+   RES
+493904
+1669770480.818902572
+   RES
+493904
+1669770480.978566732
+   RES
+493904
+1669770481.136207957
+   RES
+494164
+1669770481.295947395
+   RES
+494160
+1669770481.453779159
+   RES
+469544
+1669770481.618489110
+   RES
+469804
+1669770481.777453350
+   RES
+469804
+1669770481.937270621
+   RES
+477464
+1669770482.096107833
+   RES
+457768
+1669770482.256559621
+   RES
+457768
+1669770482.414869603
+   RES
+458276
+1669770482.574949612
+=================
+Namespace(gnn='GCN', k=10, i=6, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.689, train acc: 0.003, val loss: 3.682, val acc: 0.001 (best val acc: 0.001))
+In epoch 20, train loss: 0.964, train acc: 0.736, val loss: 1.126, val acc: 0.651 (best val acc: 0.693))
+In epoch 40, train loss: 0.814, train acc: 0.782, val loss: 0.987, val acc: 0.720 (best val acc: 0.724))
+In epoch 60, train loss: 0.745, train acc: 0.790, val loss: 0.917, val acc: 0.729 (best val acc: 0.730))
+In epoch 80, train loss: 0.692, train acc: 0.799, val loss: 0.869, val acc: 0.735 (best val acc: 0.735))
+   RES
+458020
+1669770482.734231483
+   RES
+455180
+1669770482.894838222
+   RES
+455180
+1669770483.053019376
+   RES
+455680
+1669770483.211135450
+   RES
+455424
+1669770483.369515652
+   RES
+447260
+1669770483.528492405
+   RES
+464944
+1669770483.687288016
+   RES
+455176
+1669770483.845776448
+=================
+Namespace(gnn='GCN', k=10, i=8, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.753, train acc: 0.056, val loss: 3.726, val acc: 0.038 (best val acc: 0.038))
+In epoch 20, train loss: 2.104, train acc: 0.458, val loss: 2.087, val acc: 0.438 (best val acc: 0.438))
+In epoch 40, train loss: 1.665, train acc: 0.525, val loss: 1.590, val acc: 0.509 (best val acc: 0.551))
+In epoch 60, train loss: 1.446, train acc: 0.570, val loss: 1.402, val acc: 0.554 (best val acc: 0.562))
+In epoch 80, train loss: 1.314, train acc: 0.606, val loss: 1.314, val acc: 0.587 (best val acc: 0.587))
+   RES
+447260
+1669770484.003770992
+   RES
+446880
+1669770484.162412760
+   RES
+455704
+1669770484.319601054
+   RES
+455688
+1669770484.476666865
+   RES
+490804
+1669770484.632845725
+   RES
+472296
+1669770484.790728501
+   RES
+472272
+1669770484.947257587
+   RES
+472008
+1669770485.102886529
+   RES
+480688
+1669770485.258974261
+   RES
+480688
+1669770485.416053787
+   RES
+488604
+1669770485.572638872
+   RES
+513684
+1669770485.731180840
+=================
+Namespace(gnn='GCN', k=10, i=7, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.560, train acc: 0.066, val loss: 3.568, val acc: 0.153 (best val acc: 0.153))
+In epoch 20, train loss: 1.610, train acc: 0.643, val loss: 1.885, val acc: 0.539 (best val acc: 0.568))
+In epoch 40, train loss: 1.261, train acc: 0.700, val loss: 1.522, val acc: 0.604 (best val acc: 0.604))
+In epoch 60, train loss: 1.095, train acc: 0.722, val loss: 1.346, val acc: 0.645 (best val acc: 0.645))
+In epoch 80, train loss: 0.989, train acc: 0.737, val loss: 1.231, val acc: 0.684 (best val acc: 0.684))
+   RES
+513948
+1669770485.888260947
+   RES
+513732
+1669770486.045190445
+   RES
+497272
+1669770486.201038767
+   RES
+497272
+1669770486.356937018
+   RES
+497268
+1669770486.512868085
+   RES
+469800
+1669770486.669118367
+   RES
+469800
+1669770486.825211339
+   RES
+486424
+1669770486.981359633
+   RES
+494608
+1669770487.137563838
+   RES
+494584
+1669770487.292461906
+=================
+Namespace(gnn='GCN', k=10, i=4, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.632, train acc: 0.015, val loss: 3.625, val acc: 0.010 (best val acc: 0.010))
+In epoch 20, train loss: 1.594, train acc: 0.654, val loss: 1.271, val acc: 0.738 (best val acc: 0.738))
+In epoch 40, train loss: 1.241, train acc: 0.703, val loss: 0.955, val acc: 0.776 (best val acc: 0.776))
+In epoch 60, train loss: 1.049, train acc: 0.729, val loss: 0.849, val acc: 0.787 (best val acc: 0.787))
+In epoch 80, train loss: 0.936, train acc: 0.752, val loss: 0.796, val acc: 0.794 (best val acc: 0.794))
+   RES
+485680
+1669770487.448473534
+=================
+Namespace(gnn='GCN', k=10, i=5, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.850, train acc: 0.034, val loss: 3.846, val acc: 0.018 (best val acc: 0.018))
+In epoch 20, train loss: 1.563, train acc: 0.637, val loss: 1.331, val acc: 0.666 (best val acc: 0.666))
+In epoch 40, train loss: 1.308, train acc: 0.669, val loss: 1.168, val acc: 0.681 (best val acc: 0.687))
+In epoch 60, train loss: 1.135, train acc: 0.712, val loss: 1.048, val acc: 0.714 (best val acc: 0.716))
+In epoch 80, train loss: 1.032, train acc: 0.732, val loss: 0.966, val acc: 0.738 (best val acc: 0.738))
+   RES
+485680
+1669770487.604323141
+   RES
+475016
+1669770487.759685878
+=================
+Namespace(gnn='GCN', k=10, i=3, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.717, train acc: 0.013, val loss: 3.706, val acc: 0.010 (best val acc: 0.010))
+In epoch 20, train loss: 2.401, train acc: 0.380, val loss: 2.276, val acc: 0.429 (best val acc: 0.429))
+In epoch 40, train loss: 1.718, train acc: 0.522, val loss: 1.765, val acc: 0.504 (best val acc: 0.504))
+In epoch 60, train loss: 1.471, train acc: 0.582, val loss: 1.580, val acc: 0.533 (best val acc: 0.533))
+In epoch 80, train loss: 1.358, train acc: 0.603, val loss: 1.508, val acc: 0.545 (best val acc: 0.545))
+   RES
+475016
+1669770487.914580386
+   RES
+482908
+1669770488.068635294
+   RES
+478044
+1669770488.222645939
+   RES
+473004
+1669770488.376440964
+   RES
+474988
+1669770488.530134014
+   RES
+474988
+1669770488.683741737
+   RES
+472976
+1669770488.837644904
+   RES
+453484
+1669770488.991570335
+   RES
+444416
+1669770489.145676000
+   RES
+477296
+1669770489.299872969
+   RES
+493944
+1669770489.453578586
+   RES
+496976
+1669770489.607643627
+   RES
+461512
+1669770489.761628018
+   RES
+502804
+1669770489.914988369
+   RES
+502848
+1669770490.068463016
+   RES
+437424
+1669770490.222403917
+   RES
+436636
+1669770490.376229189
+   RES
+477724
+1669770490.530467590
+   RES
+510880
+1669770490.684215718
+   RES
+519436
+1669770490.838346819
+   RES
+485500
+1669770490.992097645
+   RES
+485764
+1669770491.145758281
+   RES
+461128
+1669770491.299679766
+   RES
+461380
+1669770491.453155065
+   RES
+447516
+1669770491.606563578
+   RES
+460600
+1669770491.760024453
+   RES
+447516
+1669770491.913820424
+   RES
+455696
+1669770492.067394531
+   RES
+455580
+1669770492.221386491
+   RES
+447512
+1669770492.374804863
+   RES
+499144
+1669770492.528852625
+   RES
+488864
+1669770492.683418674
+=================
+Namespace(gnn='GCN', k=10, i=9, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.690, train acc: 0.002, val loss: 3.692, val acc: 0.003 (best val acc: 0.003))
+In epoch 20, train loss: 1.973, train acc: 0.461, val loss: 1.906, val acc: 0.506 (best val acc: 0.506))
+In epoch 40, train loss: 1.606, train acc: 0.572, val loss: 1.585, val acc: 0.581 (best val acc: 0.583))
+In epoch 60, train loss: 1.422, train acc: 0.598, val loss: 1.425, val acc: 0.598 (best val acc: 0.598))
+In epoch 80, train loss: 1.312, train acc: 0.619, val loss: 1.339, val acc: 0.611 (best val acc: 0.613))
+   RES
+488848
+1669770492.837455666
+   RES
+455320
+1669770492.991590479
+   RES
+455320
+1669770493.144787364
+   RES
+480196
+1669770493.298975037
+   RES
+480200
+1669770493.452690897
+   RES
+480200
+1669770493.606567595
+   RES
+471872
+1669770493.760759978
+=================
+Namespace(gnn='GCN', k=10, i=1, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.743, train acc: 0.034, val loss: 3.761, val acc: 0.046 (best val acc: 0.046))
+In epoch 20, train loss: 2.372, train acc: 0.363, val loss: 2.231, val acc: 0.415 (best val acc: 0.415))
+In epoch 40, train loss: 1.788, train acc: 0.494, val loss: 1.703, val acc: 0.524 (best val acc: 0.524))
+In epoch 60, train loss: 1.564, train acc: 0.551, val loss: 1.515, val acc: 0.552 (best val acc: 0.552))
+In epoch 80, train loss: 1.453, train acc: 0.578, val loss: 1.444, val acc: 0.571 (best val acc: 0.571))
+   RES
+513052
+1669770493.914158186
+   RES
+513204
+1669770494.067545001
+   RES
+444400
+1669770494.220790397
+   RES
+477196
+1669770494.374754058
+   RES
+494092
+1669770494.528112806
+   RES
+477576
+1669770494.681391011
+   RES
+451120
+1669770494.834651742
+   RES
+448892
+1669770494.988024774
+=================
+Namespace(gnn='GCN', k=10, i=10, dataset='arxiv', heads=3, dropout=0.25, no_cuda=False, student_only=False, compression_rate='big')
+training configuration:
+Model:  GCN
+Number of partitions: 10
+Dataset: arxiv
+num_heads:  3
+cpu
+# teacher params 21672
+# student params 2068
+In epoch 0, train loss: 3.710, train acc: 0.009, val loss: 3.690, val acc: 0.000 (best val acc: 0.000))
+In epoch 20, train loss: 2.234, train acc: 0.429, val loss: 2.306, val acc: 0.418 (best val acc: 0.418))
+In epoch 40, train loss: 1.650, train acc: 0.571, val loss: 1.776, val acc: 0.536 (best val acc: 0.536))
+In epoch 60, train loss: 1.427, train acc: 0.607, val loss: 1.551, val acc: 0.557 (best val acc: 0.557))
+In epoch 80, train loss: 1.304, train acc: 0.637, val loss: 1.434, val acc: 0.577 (best val acc: 0.577))
+   RES
+442564
+1669770495.141017210
+   RES
+451532
+1669770495.294341113

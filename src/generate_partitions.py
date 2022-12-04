@@ -1,6 +1,6 @@
 '''
-    This file takes in command line arguments for the training parameters
-    and runs a training/test function
+    This file runs before train parallel to generate
+    the partitions and save them to files.
 '''
 
 # ECE381K RWN Project
@@ -9,20 +9,7 @@
 
 import argparse
 import dgl
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 import dgl.data
-import networkx as nx
-import metis
-from dgl.nn import GraphConv
-import matplotlib.pyplot as plt
-import numpy as np
-from ogb.nodeproppred import DglNodePropPredDataset
-from torch.utils.tensorboard import SummaryWriter
-import os
-import time
-import copy 
 
 # our modules
 from models import *
@@ -30,8 +17,7 @@ from datasets import *
 from partition_graph import *
 
 
-def train(args):
-    print("training configuration:")
+def create_partitions(args):
     print("Number of partitions:", args.k)
     print("Dataset:", args.dataset)
 
@@ -79,6 +65,5 @@ def parse_args():
 
 # ===================================== Main =====================================
 if __name__ == "__main__":
-    print("=================")
     args = parse_args()
-    train(args)
+    create_partitions(args)

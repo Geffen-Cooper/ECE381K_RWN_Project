@@ -9,9 +9,9 @@ from models import *
 from train import *
 
 models = ["GCN"]#,"GAT","GSAGE"]
-ks = [10]#,2,5,10,20]
+ks = [1,2,5,10,20]
 datasets = ["arxiv"]
-compression_rates = ["teacher"]#["teacher","small","medium","big"]
+compression_rates = ["teacher","big"]#,"small","medium","big"]
 
 state_dicts = []
 # iterate over the datasets

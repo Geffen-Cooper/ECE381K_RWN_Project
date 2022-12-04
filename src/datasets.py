@@ -12,7 +12,7 @@ from ogb.nodeproppred import DglNodePropPredDataset
 import dgl
 import torch
 
-def load_cora():
+def load_cora(k=None):
     dataset = CoraGraphDataset()
     print('Number of categories:', dataset.num_classes)
 
@@ -27,11 +27,13 @@ def load_cora():
     cora_dgl.remove_nodes(disconnected_nodes)
     cora_dgl.num_nodes()
 
-    cora_c_nx = to_networkx(cora_dgl)
-    return cora_c_nx, cora_dgl, dataset
+    if k != 1:
+        cora_nx = to_networkx(cora_dgl)
+        return cora_nx, cora_dgl, dataset
+    return None,cora_dgl,None
 
 
-def load_citeseer():
+def load_citeseer(k=None):
     dataset = CiteseerGraphDataset()
     print('Number of categories:', dataset.num_classes)
 
@@ -46,11 +48,13 @@ def load_citeseer():
     citeseer_dgl.remove_nodes(disconnected_nodes)
     citeseer_dgl.num_nodes()
 
-    citeseer_c_nx = to_networkx(citeseer_dgl)
-    return citeseer_c_nx, citeseer_dgl, dataset
+    if k != 1:
+        citeseer_nx = to_networkx(citeseer_dgl)
+        return citeseer_nx, citeseer_dgl, dataset
+    return None,citeseer_dgl,None
 
 
-def load_arxiv():
+def load_arxiv(k=None):
     print("LOAD ARXIV")
     cuda = torch.cuda.is_available()
     device = torch.device('cuda' if cuda else 'cpu')
@@ -64,9 +68,10 @@ def load_arxiv():
     arxiv_dgl = add_reverse_edges(arxiv_dgl)
 
     print('Number of categories:', dataset.num_classes)
-
-    arxiv_nx = to_networkx(arxiv_dgl)
-    return arxiv_nx, arxiv_dgl, dataset
+    if k != 1:
+        arxiv_nx = to_networkx(arxiv_dgl)
+        return arxiv_nx, arxiv_dgl, dataset
+    return None,arxiv_dgl,None
 
 
 def load_ogbn_products():
