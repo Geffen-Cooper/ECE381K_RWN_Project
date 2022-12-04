@@ -40,4 +40,4 @@ Directory structure for project:
 		- train_parallel.py = parallel training not using multiprocessing, instead relying on bash to call python multiple times.\
 		- train_products.sh = train ogbn products bash script.\
 		- viz.py = generating plots for visualization.\
-		- viz_subgraphs.py = generating other plots for visualization.\
+		- viz_subgraphs.py = generating other plots for visualization.
