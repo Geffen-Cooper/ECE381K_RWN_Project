@@ -10,7 +10,7 @@ from train import *
 
 models = ["GCN"]#,"GAT","GSAGE"]
 ks = [1,2,5,10,20]
-datasets = ["cora","citeseer"]#,"arxiv"]
+datasets = ["cora","citeseer","arxiv"]
 
 
 # iterate over the datasets
@@ -34,7 +34,7 @@ for dataset in datasets:
             # evaluate each partition in this k
             for partition in range(k):
                 # load the partition checkpoint
-                checkpoint_path = "saved_models/best_"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
+                checkpoint_path = "saved_models_p/best_"+str(model)+"_"+str(dataset)+"_"+"p"+str(partition+1)+"_k"+str(k)+".pth"
                 checkpoint = torch.load(checkpoint_path)
                 args = checkpoint['args']
 

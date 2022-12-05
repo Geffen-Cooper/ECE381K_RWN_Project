@@ -2,6 +2,7 @@
 *.zip
 data/
 *.pth
+*.bin
 src/runs/
 scripts/metis-5.1.0/
 src/dataset/
