@@ -54,7 +54,7 @@ def train(args):
         partitions, parts_tensor = partition_network(args.k, dataset_nx, dataset_dgl)
 
 
-    print("partitions: \n", partitions)
+    # print("partitions: \n", partitions)
 
     num_classes = dataset.num_classes
 
@@ -64,8 +64,20 @@ def train(args):
     #      print("idx: \n", idx)
     #      print("partition: \n", partition)
     #     globals()["partition_%d"%idx] = partition
-        
-    
+
+    # Train each partition in parallel. For all k partitions.
+    start_time = time.perf_counter()
+    with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
+        func = partial(train_parallel, num_classes, args)
+        pool.map(func, partitions)
+        print("Intermediate debug statement")
+        pool.close()
+        pool.join()
+    end_time = time.perf_counter()
+    total_time = end_time - start_time
+    print("Time used for all processes: ", total_time) 
+
+    '''
     if args.k == 1:
         start_time = time.perf_counter()
         with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
@@ -100,28 +112,35 @@ def train(args):
         total_time = end_time - start_time
         print("Time used for all processes: ", total_time)
     elif args.k == 10:
-        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
-        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
-        parallel_0.start()
-        parallel_1.start()
-        parallel_0.join()
-        parallel_1.join()
+        start_time = time.perf_counter()
+        with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
+            func = partial(train_parallel, num_classes, args)
+            pool.map(func, partitions)
+            print("Intermediate debug statement")
+            pool.close()
+            pool.join()
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print("Time used for all processes: ", total_time)
     else:
-        print(args.k)
-        print(type(args.k))
-        parallel_0 = multiprocessing.Process(target=train_parallel(partition_0, dataset, dataset_dgl, args, device, writer, 0))
-        parallel_1 = multiprocessing.Process(target=train_parallel(partition_1, dataset, dataset_dgl, args, device, writer, 1))
-        parallel_0.start()
-        parallel_1.start()
-        parallel_0.join()
-        parallel_1.join()
+        start_time = time.perf_counter()
+        with multiprocessing.get_context('spawn').Pool(multiprocessing.cpu_count()) as pool:
+            func = partial(train_parallel, num_classes, args)
+            pool.map(func, partitions)
+            print("Intermediate debug statement")
+            pool.close()
+            pool.join()
+        end_time = time.perf_counter()
+        total_time = end_time - start_time
+        print("Time used for all processes: ", total_time)
+    '''
 
 
 # def train_parallel(partitions, dataset, dataset_dgl, args, device, writer, idx):
 def train_parallel(num_classes, args, partition):
     start_time = time.perf_counter()
-    print("\n\n start time of parallel process: ", start_time)
-    print("partitions function: \n", partition)
+    # print("\n\n start time of parallel process: ", start_time)
+    # print("partitions function: \n", partition)
     # init tensorboard
     writer = SummaryWriter()
 
@@ -161,7 +180,7 @@ def train_parallel(num_classes, args, partition):
 
     # # train the subgraph
     for e in range(100):
-        print("e: ", e)
+        # print("e: ", e)
         # print("teacher ID: ", id(teacher_model))
         # print("ID partition: ", id(partition))
         # print("ID feature: ", id(features))

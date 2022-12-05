@@ -1,9 +1,0 @@
-1. memory profiling
-2. run training/inference in parallel
-3. Aggregate the results from the partitions to possibly improve accuracy matching the
- original teacher model.
-4. Now we have partitioned into subragphs, trained subgraph GNNs, distilled knowledge
-from subgraph GNN teacher to subgraph GNN students, and aggregated the knowledge
-from the partitions to preserve accuracy. This allows for distilled subgraph GNNs
-on mobile or edge devices.
-

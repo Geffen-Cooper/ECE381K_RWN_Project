@@ -314,8 +314,6 @@ def validate(model, partition):
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
 
-
-
     with torch.no_grad():
         # Forward
         logits = model(partition, features)
@@ -336,9 +334,6 @@ def student_validate(model, student_model, partition, alpha, Temperature):
     features = partition.ndata['feat']
     labels = partition.ndata['label']
     val_mask = partition.ndata['val_mask']
-
-    
-
 
     with torch.no_grad():
         # Forward

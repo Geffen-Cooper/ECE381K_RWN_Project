@@ -2,10 +2,15 @@
 *.zip
 data/
 *.pth
+<<<<<<< HEAD
 *.bin
+=======
+runs/
+>>>>>>> 36cfd688553f43d94045b5c3d63c80a796db4a9c
 src/runs/
 scripts/metis-5.1.0/
 src/dataset/
+src/graph_partitions/
 notebooks/dataset/
 
 # Byte-compiled / optimized / DLL files
