@@ -3,7 +3,7 @@
 # Mustafa Munir and Geffen Cooper
 
 # Overview
-This repository stores contains the source code for our ECE381K project: *Graph Neural Network Compression for Edge Devices*. The directory structure is as follows
+This repository contains the source code for our ECE381K project: *Graph Neural Network Compression for Edge Devices*. The directory structure is as follows
 
 ### data
 Contains the data for arxiv, citeseer, and cora datasets. Contains .gexf and .gephi files for visualizations of data as well in gephi.
