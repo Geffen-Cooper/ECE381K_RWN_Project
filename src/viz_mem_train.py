@@ -51,14 +51,14 @@ def visualize_mem(args):
 
     if args.parallel == "y":
         if args.ts == "s":
-            plt.title("Memory usage during inference on "+args.dataset+" ("+size +" student, 1 out of "+ str(args.k)+ " partitions)")
+            plt.title("Memory usage during training on "+args.dataset+" ("+size +" student, 1 out of "+ str(args.k)+ " partitions)")
         else:
-            plt.title("Memory usage during inference on "+args.dataset+" (teacher, 1 out of "+ str(args.k)+ " partitions)")
+            plt.title("Memory usage during training on "+args.dataset+" (teacher, 1 out of "+ str(args.k)+ " partitions)")
     else:
         if args.ts == "s":
-            plt.title("Memory usage during inference on "+args.dataset+" ("+size +" student, Full Graph)")
+            plt.title("Memory usage during training on "+args.dataset+" ("+size +" student, Full Graph)")
         else:
-            plt.title("Memory usage during inference on "+args.dataset+" (teacher, Full Graph)")
+            plt.title("Memory usage during training on "+args.dataset+" (teacher, Full Graph)")
     # print("mems",mems)
     # print(t)
 
