@@ -10,10 +10,10 @@ student_only=$7
 # create the log file
 if [ "$ts" = "s" ]; then
     cr=$5
-    log_file="logs/logmem_train_${gnn}_${dataset}_${ts}_${cr}_${k}.txt"
+    log_file="logs/log_mem_train_${gnn}_${dataset}_${ts}_${cr}_${k}.txt"
 else
     cr="Big"
-    log_file="logs/logmem_${gnn}_${dataset}_${ts}_${k}.txt"
+    log_file="logs/log_mem_train_${gnn}_${dataset}_${ts}_${k}.txt"
 fi
 
 echo $log_file
@@ -44,3 +44,5 @@ fi
 
 # end time
 echo $(date +%s.%N) >> $log_file
+
+python viz_mem_train.py --gnn=$gnn --k=$k --ts=$ts --dataset=$dataset --compression_rate=$cr --parallel=$parallel

@@ -39,7 +39,7 @@ def train(args):
 
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
-    # device = 'cpu'
+    device = 'cpu'
     print(device)
 
     # first load the dataset, split into k partitions
@@ -153,76 +153,76 @@ def train(args):
 
     # ########################################STUDENT MODEL STARTS##########################################################
 
-            # # Obtain Distilled Model and logits
-            # teacher_checkpoint = torch.load(best_path)
-            # teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
-            # teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
-            # teacher_model.eval()
-            # student_model.train()
-            # teacher_model.to(device)
+            # Obtain Distilled Model and logits
+            teacher_checkpoint = torch.load(best_path)
+            teacher_model = load_model(args.gnn, features, num_classes, args.heads, args.dropout)
+            teacher_model.load_state_dict(teacher_checkpoint['model_state_dict'])
+            teacher_model.eval()
+            student_model.train()
+            teacher_model.to(device)
 
-            # best_student_val_acc = 0
+            best_student_val_acc = 0
 
-            # for i in range(100):
+            for i in range(100):
 
-            #     # Forward
-            #     logits = teacher_model(partition, features)
-            #     student_logits = student_model(partition, features)
+                # Forward
+                logits = teacher_model(partition, features)
+                student_logits = student_model(partition, features)
 
 
-            #     # distillation_loss = abs(student_logits - logits)
-            #     alpha = 0.1
-            #     Temperature = 1
-            #     student_train_loss = loss_fn_kd(student_logits[train_mask], labels[train_mask], logits[train_mask], alpha, Temperature)
+                # distillation_loss = abs(student_logits - logits)
+                alpha = 0.1
+                Temperature = 1
+                student_train_loss = loss_fn_kd(student_logits[train_mask], labels[train_mask], logits[train_mask], alpha, Temperature)
 
-            #     student_pred = student_logits.argmax(1)
+                student_pred = student_logits.argmax(1)
 
-            #     # Compute loss
-            #     # Note that you should only compute the losses of the nodes in the training set.
-            #     # Compute accuracy on training dataset
-            #     student_train_acc = (student_pred[train_mask] == labels[train_mask]).float().mean()
-            #     writer.add_scalar("Loss/train", student_train_loss.item(), i)
-            #     writer.add_scalar("Accuracy/train", student_train_acc, i)
+                # Compute loss
+                # Note that you should only compute the losses of the nodes in the training set.
+                # Compute accuracy on training dataset
+                student_train_acc = (student_pred[train_mask] == labels[train_mask]).float().mean()
+                writer.add_scalar("Loss/train", student_train_loss.item(), i)
+                writer.add_scalar("Accuracy/train", student_train_acc, i)
 
-            #     # evaluate on the validation set
-            #     student_val_acc, student_val_loss = student_validate(teacher_model, student_model, partition, alpha, Temperature)
-            #     student_val_loss = student_val_loss.item()
-            #     writer.add_scalar("Loss/val", student_val_loss, i)
-            #     writer.add_scalar("Accuracy/val", student_val_acc, i)
+                # evaluate on the validation set
+                student_val_acc, student_val_loss = student_validate(teacher_model, student_model, partition, alpha, Temperature)
+                student_val_loss = student_val_loss.item()
+                writer.add_scalar("Loss/val", student_val_loss, i)
+                writer.add_scalar("Accuracy/val", student_val_acc, i)
 
-            #     # Save the validation accuracy
-            #     #if best_distillation_loss > student_val_loss:
-            #     if best_student_val_acc < student_val_acc:
-            #         best_distillation_loss = student_val_loss
-            #         best_student_val_acc = student_val_acc.item()
-            #         best_path = 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth' 
-            #         checkpoint = {
-            #             'epoch': i + 1,
-            #             'model_state_dict': student_model.state_dict(),
-            #             'val_acc': best_student_val_acc,
-            #             'best_distillation_loss': best_distillation_loss,
-            #             'partition_size': partition.num_nodes(),
-            #             'train_size': sum(partition.ndata['train_mask'] == True),
-            #             'val_size': sum(partition.ndata['val_mask'] == True),
-            #             'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
-            #             'val_mask': partition.ndata['val_mask'],
-            #             'test_mask': partition.ndata['test_mask'],
-            #             'args':args
-            #         }
-            #         if args.k > 1:
-            #             checkpoint['node_ids'] = partition.ndata['og_ids']
-            #         torch.save(checkpoint, best_path)
+                # Save the validation accuracy
+                #if best_distillation_loss > student_val_loss:
+                if best_student_val_acc < student_val_acc:
+                    best_distillation_loss = student_val_loss
+                    best_student_val_acc = student_val_acc.item()
+                    best_path = 'saved_models/best_student_validation_' + str(args.compression_rate) + str(args.gnn) + '_' + str(args.dataset) + '_p' + str(idx + 1) + '_k' + str(args.k) + '.pth' 
+                    checkpoint = {
+                        'epoch': i + 1,
+                        'model_state_dict': student_model.state_dict(),
+                        'val_acc': best_student_val_acc,
+                        'best_distillation_loss': best_distillation_loss,
+                        'partition_size': partition.num_nodes(),
+                        'train_size': sum(partition.ndata['train_mask'] == True),
+                        'val_size': sum(partition.ndata['val_mask'] == True),
+                        'total_val_size': sum(dataset_dgl.ndata['val_mask'] == True),
+                        'val_mask': partition.ndata['val_mask'],
+                        'test_mask': partition.ndata['test_mask'],
+                        'args':args
+                    }
+                    if args.k > 1:
+                        checkpoint['node_ids'] = partition.ndata['og_ids']
+                    torch.save(checkpoint, best_path)
 
-            #     # Backward
-            #     student_optimizer.zero_grad()
-            #     student_train_loss.backward()
-            #     student_optimizer.step()
+                # Backward
+                student_optimizer.zero_grad()
+                student_train_loss.backward()
+                student_optimizer.step()
 
-            #     # print the current results
-            #     if i % 20 == 0:
-            #         print(
-            #             'In epoch {}, student train loss: {:.3f}, student train acc: {:.3f}, student val loss: {:.3f}, student val acc: {:.3f} (best student val acc: {:.3f}))'.format(
-            #                 i, student_train_loss, student_train_acc, student_val_loss, student_val_acc, best_student_val_acc))
+                # print the current results
+                if i % 20 == 0:
+                    print(
+                        'In epoch {}, student train loss: {:.3f}, student train acc: {:.3f}, student val loss: {:.3f}, student val acc: {:.3f} (best student val acc: {:.3f}))'.format(
+                            i, student_train_loss, student_train_acc, student_val_loss, student_val_acc, best_student_val_acc))
 
 
             # print("p", idx, " best teacher validation accuracy --> ", best_val_acc)

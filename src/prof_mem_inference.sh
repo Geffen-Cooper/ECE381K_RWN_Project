@@ -9,10 +9,10 @@ parallel=$6
 # create the log file
 if [ "$ts" = "s" ]; then
     cr=$5
-    log_file="logs/logmem_${gnn}_${dataset}_${ts}_${cr}_${k}.txt"
+    log_file="logs/log_mem_inf_${gnn}_${dataset}_${ts}_${cr}_${k}.txt"
 else
     cr="Big"
-    log_file="logs/logmem_${gnn}_${dataset}_${ts}_${k}.txt"
+    log_file="logs/log_mem_inf_${gnn}_${dataset}_${ts}_${k}.txt"
 fi
 
 # if want to profile a single process

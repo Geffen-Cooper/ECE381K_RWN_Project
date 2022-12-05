@@ -19,9 +19,9 @@ def visualize_mem(args):
 
     # open the log file
     if args.ts == "s":
-        log_file = "logs/logmem_"+args.gnn+"_"+args.dataset+"_"+args.ts+"_"+args.compression_rate+"_"+str(args.k)+".txt"
+        log_file = "logs/log_mem_inf_"+args.gnn+"_"+args.dataset+"_"+args.ts+"_"+args.compression_rate+"_"+str(args.k)+".txt"
     else:
-        log_file = "logs/logmem_"+args.gnn+"_"+args.dataset+"_"+args.ts+"_"+str(args.k)+".txt"
+        log_file = "logs/log_mem_inf_"+args.gnn+"_"+args.dataset+"_"+args.ts+"_"+str(args.k)+".txt"
     with open(log_file) as file:
         lines = [line.rstrip() for line in file]
 

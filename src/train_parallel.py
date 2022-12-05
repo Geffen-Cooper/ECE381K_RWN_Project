@@ -384,7 +384,7 @@ def parse_args():
     parser.add_argument("--heads",help="If using GAT provide num_heads, otherwise enter 0",type=int, default=3)
     parser.add_argument("--dropout", help="Dropout rate. 1 - keep_probability = dropout rate", type=float, default=0.25)
     parser.add_argument("--no_cuda", help="If True then will disable CUDA training", type=bool, default=False)
-    parser.add_argument("--student_only", help="If True then will train student model only", type=str, default="y")
+    parser.add_argument("--student_only", help="If True then will train student model only", type=str, default="n")
     parser.add_argument("--compression_rate", help="compression rate for KD (big, medium, small)", type=str, default="medium")
 
     args = parser.parse_args()

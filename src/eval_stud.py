@@ -10,8 +10,8 @@ from train import *
 
 models = ["GCN"]#,"GAT","GSAGE"]
 ks = [1,2,5,10,20]
-datasets = ["arxiv"]
-compression_rates = ["teacher","big"]#,"small","medium","big"]
+datasets = ["cora","citeseer","arxiv"]
+compression_rates = ["teacher","small","medium","big"]
 
 state_dicts = []
 # iterate over the datasets
@@ -99,6 +99,12 @@ for dataset in datasets:
             plt.xticks([1,2,5,10,20])
     plt.legend()
 plt.show()
+
+
+
+
+
+
 
 # import copy
 # print("Aggregation", len(state_dicts))
