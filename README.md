@@ -3,26 +3,25 @@
 # Mustafa Munir and Geffen Cooper
 
 # Overview
-summarize the project repo and directory structure
+This repository stores contains the source code for our ECE381K project: *Graph Neural Network Compression for Edge Devices*. The directory structure is as follows
 
-# Usage
-We use several packages in this repo. You can replicate the conda environment by using
-Directory structure for project:
+### data
+Contains the data for arxiv, citeseer, and cora datasets. Contains .gexf and .gephi files for visualizations of data as well in gephi.
+* arxiv = contains arxiv data.
+* citeseer = contains citeseer data.
+* cora = contains cora data. 
 
--- data = Contains the data for arxiv, citeseer, and cora datasets. Contains .gexf and .gephi files for visualizations of data as well.
-	- arxiv = contains arxiv data.
-	- citeseer = contains citeseer data.
-	- cora = contains cora data. 
-	
--- notebooks = Contains iPython notebooks and generated .gexf files.
+### notebooks
+Contains iPython notebooks and generated .gexf files. These are mainly used for scratch work but also show how to load datasets with dgl and networkx and use METIS.
 
--- scripts = Contains some miscellaneous scripts used throughout the project as well as reference scripts.
-	
--- src = Contains the primary code for the project actually implementing the partitioning, knowledge distillation, parallelization, and subgraph training.\
-	- archive = contains some archived results/code.\
-	- fil-result = contains some memory profiling results.\
-	- gml = contains gml files of some datasets partitions.\
-	- logs = contains some log files generated for debugging.\
+### scripts
+Contains some miscellaneous scripts used throughout the project as well as reference scripts.
+
+### src
+Contains the primary code for the project actually implementing the partitioning, knowledge distillation, parallelization, and subgraph training.
+* archive = contains some archived results/code.
+* gml = contains gml files of some datasets partitions.
+* logs = contains some log files generated for debugging and memory profiling
 	- parallelization_playground = contains some practice parallelization files for debugging parallelization.\
 	- Files\
 		- convert.ipynb = debugging notebook.\
@@ -46,3 +45,9 @@ Directory structure for project:
 		- train_products.sh = train ogbn products bash script.\
 		- viz.py = generating plots for visualization.\
 		- viz_subgraphs.py = generating other plots for visualization.
+
+# Usage
+We use several packages in this repo. You can replicate the conda environment by using
+Directory structure for project:
+
+
