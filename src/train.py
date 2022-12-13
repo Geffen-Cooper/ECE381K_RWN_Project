@@ -37,10 +37,13 @@ def train(args):
     print("Dataset:", args.dataset)
     print("num_heads: ", args.heads)
 
+    if torch.cuda.is_available():
+        print('cuda is available')
     args.cuda = (not args.no_cuda) and torch.cuda.is_available()
     device = torch.device('cuda' if args.cuda else 'cpu')
-    device = 'cpu'
-    print(device)
+    #device = 'cpu'
+    print("Using device " + str(device))
+
 
     # first load the dataset, split into k partitions
     dataset_nx, dataset_dgl, dataset = load_dataset(args.dataset,args.k)
